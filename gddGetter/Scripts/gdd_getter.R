@@ -1,6 +1,6 @@
 
 setwd("~/Desktop/aeolus_scripts/gddGetter")
-list.of.packages = c("RMySQL","mailR","maptools","RColorBrewer","sp","rgeos")
+list.of.packages = c("RMySQL","mailR","maptools","RColorBrewer","sp","rgeos","rjson")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages,repos="http://cran.rstudio.com/")
 
@@ -10,6 +10,7 @@ library(maptools)
 library(sp)
 library(RColorBrewer)
 library(rgeos)
+library(rjson)
 
 setwd("~/Desktop/aeolus_scripts/gddGetter/Output")
 
