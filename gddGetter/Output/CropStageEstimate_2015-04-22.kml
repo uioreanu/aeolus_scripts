@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://earth.google.com/kml/2.2">
+<Document>
+<name>PolygonViz</name>
+<description><![CDATA[]]></description>
+<Folder><name>Current Stage</name>
+<Folder><name>V2</name>
+
+		  <Placemark> <name> Rogers-TX </name> <Style id="Mavrx Airport">      <IconStyle>        <Icon>          <href>http://www.clker.com/cliparts/4/5/c/0/12249615002008292168Japanese_Map_symbol_(Orchard).svg.med.png</href>             <scale> 0.5 </scale></Icon> <color> 641C19D7</color> </IconStyle>    </Style>  <Point><coordinates> -97.2702938081,30.8592667619,0</coordinates> </Point> </Placemark>
+
+		  <Placemark> <name> Jones-LA </name> <Style id="Mavrx Airport">      <IconStyle>        <Icon>          <href>http://www.clker.com/cliparts/4/5/c/0/12249615002008292168Japanese_Map_symbol_(Orchard).svg.med.png</href>             <scale> 0.5 </scale></Icon> <color> 641C19D7</color> </IconStyle>    </Style>  <Point><coordinates> -91.6411048648,32.9744925186,0</coordinates> </Point> </Placemark>
+
+		  <Placemark> <name> Marianna-AR </name> <Style id="Mavrx Airport">      <IconStyle>        <Icon>          <href>http://www.clker.com/cliparts/4/5/c/0/12249615002008292168Japanese_Map_symbol_(Orchard).svg.med.png</href>             <scale> 0.5 </scale></Icon> <color> 641C19D7</color> </IconStyle>    </Style>  <Point><coordinates> -90.7915778993,34.7908447812,0</coordinates> </Point> </Placemark>
+</Folder>
+<Folder><name>Emergence-V2</name>
+
+		  <Placemark> <name> Danevang-TX </name> <Style id="Mavrx Airport">      <IconStyle>        <Icon>          <href>http://www.clker.com/cliparts/4/5/c/0/12249615002008292168Japanese_Map_symbol_(Orchard).svg.med.png</href>             <scale> 0.5 </scale></Icon> <color> 6461AEFD</color> </IconStyle>    </Style>  <Point><coordinates> -96.1978409245,29.0150211785,0</coordinates> </Point> </Placemark>
+</Folder>
+<Folder><name>Not Emerged</name>
+
+		  <Placemark> <name> Waco-NE </name> <Style id="Mavrx Airport">      <IconStyle>        <Icon>          <href>http://www.clker.com/cliparts/4/5/c/0/12249615002008292168Japanese_Map_symbol_(Orchard).svg.med.png</href>             <scale> 0.5 </scale></Icon> <color> 64BFFFFF</color> </IconStyle>    </Style>  <Point><coordinates> -97.4509840169,40.8996550906,0</coordinates> </Point> </Placemark>
+</Folder>
+<Folder><name>Emergence</name>
+
+		  <Placemark> <name> WamegoIRR-KS </name> <Style id="Mavrx Airport">      <IconStyle>        <Icon>          <href>http://www.clker.com/cliparts/4/5/c/0/12249615002008292168Japanese_Map_symbol_(Orchard).svg.med.png</href>             <scale> 0.5 </scale></Icon> <color> 646AD9A6</color> </IconStyle>    </Style>  <Point><coordinates> -96.2435948172,39.2155063886,0</coordinates> </Point> </Placemark>
+
+		  <Placemark> <name> Richland-IA </name> <Style id="Mavrx Airport">      <IconStyle>        <Icon>          <href>http://www.clker.com/cliparts/4/5/c/0/12249615002008292168Japanese_Map_symbol_(Orchard).svg.med.png</href>             <scale> 0.5 </scale></Icon> <color> 646AD9A6</color> </IconStyle>    </Style>  <Point><coordinates> -91.9905778708,41.1804777174,0</coordinates> </Point> </Placemark>
+
+		  <Placemark> <name> Stanwood-IA </name> <Style id="Mavrx Airport">      <IconStyle>        <Icon>          <href>http://www.clker.com/cliparts/4/5/c/0/12249615002008292168Japanese_Map_symbol_(Orchard).svg.med.png</href>             <scale> 0.5 </scale></Icon> <color> 646AD9A6</color> </IconStyle>    </Style>  <Point><coordinates> -91.1364734029,41.8900553037,0</coordinates> </Point> </Placemark>
+
+		  <Placemark> <name> Kilbourne-IL </name> <Style id="Mavrx Airport">      <IconStyle>        <Icon>          <href>http://www.clker.com/cliparts/4/5/c/0/12249615002008292168Japanese_Map_symbol_(Orchard).svg.med.png</href>             <scale> 0.5 </scale></Icon> <color> 646AD9A6</color> </IconStyle>    </Style>  <Point><coordinates> -90.0565870808,40.1318358222,0</coordinates> </Point> </Placemark>
+
+		  <Placemark> <name> Springfield-IL </name> <Style id="Mavrx Airport">      <IconStyle>        <Icon>          <href>http://www.clker.com/cliparts/4/5/c/0/12249615002008292168Japanese_Map_symbol_(Orchard).svg.med.png</href>             <scale> 0.5 </scale></Icon> <color> 646AD9A6</color> </IconStyle>    </Style>  <Point><coordinates> -89.764331443,39.7373664713,0</coordinates> </Point> </Placemark>
+
+		  <Placemark> <name> Macomb-IL </name> <Style id="Mavrx Airport">      <IconStyle>        <Icon>          <href>http://www.clker.com/cliparts/4/5/c/0/12249615002008292168Japanese_Map_symbol_(Orchard).svg.med.png</href>             <scale> 0.5 </scale></Icon> <color> 646AD9A6</color> </IconStyle>    </Style>  <Point><coordinates> -90.6170662202,40.416471147,0</coordinates> </Point> </Placemark>
+
+		  <Placemark> <name> Risco-MO </name> <Style id="Mavrx Airport">      <IconStyle>        <Icon>          <href>http://www.clker.com/cliparts/4/5/c/0/12249615002008292168Japanese_Map_symbol_(Orchard).svg.med.png</href>             <scale> 0.5 </scale></Icon> <color> 646AD9A6</color> </IconStyle>    </Style>  <Point><coordinates> -89.7874210252,36.5512505688,0</coordinates> </Point> </Placemark>
+</Folder>
+</Folder>
+<Folder><name>Stage In Next 5 Days</name>
+<Folder><name>V2-V4</name>
+
+		  <Placemark> <name> Rogers-TX </name> <Style id="Mavrx Airport">      <IconStyle>        <Icon>          <href>http://www.clker.com/cliparts/4/5/c/0/12249615002008292168Japanese_Map_symbol_(Orchard).svg.med.png</href>             <scale> 0.5 </scale></Icon> <color> 6441961A</color> </IconStyle>    </Style>  <Point><coordinates> -97.2702938081,30.8592667619,0</coordinates> </Point> </Placemark>
+</Folder>
+<Folder><name>V2</name>
+
+		  <Placemark> <name> Jones-LA </name> <Style id="Mavrx Airport">      <IconStyle>        <Icon>          <href>http://www.clker.com/cliparts/4/5/c/0/12249615002008292168Japanese_Map_symbol_(Orchard).svg.med.png</href>             <scale> 0.5 </scale></Icon> <color> 641C19D7</color> </IconStyle>    </Style>  <Point><coordinates> -91.6411048648,32.9744925186,0</coordinates> </Point> </Placemark>
+
+		  <Placemark> <name> Danevang-TX </name> <Style id="Mavrx Airport">      <IconStyle>        <Icon>          <href>http://www.clker.com/cliparts/4/5/c/0/12249615002008292168Japanese_Map_symbol_(Orchard).svg.med.png</href>             <scale> 0.5 </scale></Icon> <color> 641C19D7</color> </IconStyle>    </Style>  <Point><coordinates> -96.1978409245,29.0150211785,0</coordinates> </Point> </Placemark>
+
+		  <Placemark> <name> Marianna-AR </name> <Style id="Mavrx Airport">      <IconStyle>        <Icon>          <href>http://www.clker.com/cliparts/4/5/c/0/12249615002008292168Japanese_Map_symbol_(Orchard).svg.med.png</href>             <scale> 0.5 </scale></Icon> <color> 641C19D7</color> </IconStyle>    </Style>  <Point><coordinates> -90.7915778993,34.7908447812,0</coordinates> </Point> </Placemark>
+</Folder>
+<Folder><name>Emergence</name>
+
+		  <Placemark> <name> Waco-NE </name> <Style id="Mavrx Airport">      <IconStyle>        <Icon>          <href>http://www.clker.com/cliparts/4/5/c/0/12249615002008292168Japanese_Map_symbol_(Orchard).svg.med.png</href>             <scale> 0.5 </scale></Icon> <color> 646AD9A6</color> </IconStyle>    </Style>  <Point><coordinates> -97.4509840169,40.8996550906,0</coordinates> </Point> </Placemark>
+
+		  <Placemark> <name> WamegoIRR-KS </name> <Style id="Mavrx Airport">      <IconStyle>        <Icon>          <href>http://www.clker.com/cliparts/4/5/c/0/12249615002008292168Japanese_Map_symbol_(Orchard).svg.med.png</href>             <scale> 0.5 </scale></Icon> <color> 646AD9A6</color> </IconStyle>    </Style>  <Point><coordinates> -96.2435948172,39.2155063886,0</coordinates> </Point> </Placemark>
+
+		  <Placemark> <name> Richland-IA </name> <Style id="Mavrx Airport">      <IconStyle>        <Icon>          <href>http://www.clker.com/cliparts/4/5/c/0/12249615002008292168Japanese_Map_symbol_(Orchard).svg.med.png</href>             <scale> 0.5 </scale></Icon> <color> 646AD9A6</color> </IconStyle>    </Style>  <Point><coordinates> -91.9905778708,41.1804777174,0</coordinates> </Point> </Placemark>
+
+		  <Placemark> <name> Stanwood-IA </name> <Style id="Mavrx Airport">      <IconStyle>        <Icon>          <href>http://www.clker.com/cliparts/4/5/c/0/12249615002008292168Japanese_Map_symbol_(Orchard).svg.med.png</href>             <scale> 0.5 </scale></Icon> <color> 646AD9A6</color> </IconStyle>    </Style>  <Point><coordinates> -91.1364734029,41.8900553037,0</coordinates> </Point> </Placemark>
+
+		  <Placemark> <name> Kilbourne-IL </name> <Style id="Mavrx Airport">      <IconStyle>        <Icon>          <href>http://www.clker.com/cliparts/4/5/c/0/12249615002008292168Japanese_Map_symbol_(Orchard).svg.med.png</href>             <scale> 0.5 </scale></Icon> <color> 646AD9A6</color> </IconStyle>    </Style>  <Point><coordinates> -90.0565870808,40.1318358222,0</coordinates> </Point> </Placemark>
+
+		  <Placemark> <name> Springfield-IL </name> <Style id="Mavrx Airport">      <IconStyle>        <Icon>          <href>http://www.clker.com/cliparts/4/5/c/0/12249615002008292168Japanese_Map_symbol_(Orchard).svg.med.png</href>             <scale> 0.5 </scale></Icon> <color> 646AD9A6</color> </IconStyle>    </Style>  <Point><coordinates> -89.764331443,39.7373664713,0</coordinates> </Point> </Placemark>
+
+		  <Placemark> <name> Macomb-IL </name> <Style id="Mavrx Airport">      <IconStyle>        <Icon>          <href>http://www.clker.com/cliparts/4/5/c/0/12249615002008292168Japanese_Map_symbol_(Orchard).svg.med.png</href>             <scale> 0.5 </scale></Icon> <color> 646AD9A6</color> </IconStyle>    </Style>  <Point><coordinates> -90.6170662202,40.416471147,0</coordinates> </Point> </Placemark>
+</Folder>
+<Folder><name>Emergence-V2</name>
+
+		  <Placemark> <name> Risco-MO </name> <Style id="Mavrx Airport">      <IconStyle>        <Icon>          <href>http://www.clker.com/cliparts/4/5/c/0/12249615002008292168Japanese_Map_symbol_(Orchard).svg.med.png</href>             <scale> 0.5 </scale></Icon> <color> 6461AEFD</color> </IconStyle>    </Style>  <Point><coordinates> -89.7874210252,36.5512505688,0</coordinates> </Point> </Placemark>
+</Folder>
+</Folder>
+</Document>
+</kml>

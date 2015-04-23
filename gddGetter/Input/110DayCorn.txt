@@ -1,0 +1,266 @@
+
+Apr 11	0 est		0-13
+Apr 12	5 est		0-26
+Apr 13	9 est		0-46
+Apr 14	14 est		0-63
+Apr 15	20 est		0-77
+Apr 16	26 est		3-85
+Apr 17	33 est		7-94
+Apr 18	39 est	Emergence	7-111
+Apr 19	47 est	Emergence	8-115
+Apr 20	54 est	Emergence	11-138
+Apr 21	61 est	Emergence	17-161
+Apr 22	66 est	Emergence	25-176
+Apr 23	73 est	Emergence	26-186
+Apr 24	80 est	Emergence	32-195
+Apr 25	88 est	Emergence	38-199
+Apr 26	97 est	Emergence	44-211
+Apr 27	106 est	Emergence	44-216
+Apr 28	113 est	Emergence	48-226
+Apr 29	120 est	Emergence	56-239
+Apr 30	128 est	Emergence	71-252
+May 01	136 est	Emergence	80-263
+May 02	143 est	Emergence-V2	84-274
+May 03	151 est	Emergence-V2	87-287
+May 04	160 est	Emergence-V2	91-303
+May 05	168 est	Emergence-V2	100-312
+May 06	178 est	Emergence-V2	100-323
+May 07	188 est	Emergence-V2	108-336
+May 08	198 est	V2	120-352
+May 09	209 est	V2	134-371
+May 10	221 est	V2	143-391
+May 11	233 est	V2	153-405
+May 12	244 est	V2	162-416
+May 13	255 est	V2	177-422
+May 14	265 est	V2	183-435
+May 15	276 est	V2	187-439
+May 16	286 est	V2-V4	199-444
+May 17	298 est	V2-V4	213-453
+May 18	310 est	V2-V4	229-468
+May 19	323 est	V2-V4	241-487
+May 20	337 est	V2-V4	248-513
+May 21	350 est	V2-V4	256-529
+May 22	362 est	V2-V4	266-532
+May 23	376 est	V2-V4	280-540
+May 24	389 est	V4	291-545
+May 25	401 est	V4	300-562
+May 26	412 est	V4	301-582
+May 27	425 est	V4	304-597
+May 28	438 est	V4-V6	307-620
+May 29	451 est	V4-V6	313-641
+May 30	467 est	V4-V6	323-662
+May 31	483 est	V4-V6	337-684
+Jun 01	498 est	V4-V6	352-707
+Jun 02	514 est	V4-V6	367-720
+Jun 03	528 est	V4-V6	383-733
+Jun 04	542 est	V4-V6	397-747
+Jun 05	556 est	V4-V6	410-769
+Jun 06	571 est	V4-V8	424-792
+Jun 07	589 est	V4-V8	432-819
+Jun 08	607 est	V4-V8	440-842
+Jun 09	625 est	V4-V8	451-858
+Jun 10	642 est	V6-V8	466-870
+Jun 11	661 est	V6-V8	479-891
+Jun 12	679 est	V6-V8	496-916
+Jun 13	699 est	V6-V8	518-943
+Jun 14	720 est	V6-V10	540-970
+Jun 15	739 est	V6-V10	564-992
+Jun 16	758 est	V6-V10	589-1018
+Jun 17	777 est	V6-V10	615-1045
+Jun 18	798 est	V8-V10	636-1072
+Jun 19	819 est	V8-V10	653-1100
+Jun 20	839 est	V8-V10	675-1123
+Jun 21	860 est	V8-V10	697-1148
+Jun 22	882 est	V8-V10	722-1175
+Jun 23	904 est	V8-V10	740-1199
+Jun 24	925 est	V8-V10	763-1224
+Jun 25	948 est	V8-V10	781-1241
+Jun 26	970 est	V10	803-1254
+Jun 27	992 est	V10	827-1272
+Jun 28	1014 est	V10	853-1295
+Jun 29	1035 est	V10	882-1316
+Jun 30	1056 est	V10	909-1334
+Jul 01	1076 est	V10	932-1353
+Jul 02	1096 est	V10-Silking	958-1376
+Jul 03	1117 est	Silking	978-1396
+Jul 04	1140 est	Silking	990-1422
+Jul 05	1162 est	Silking	1004-1445
+Jul 06	1183 est	Silking	1016-1471
+Jul 07	1206 est	Silking	1032-1495
+Jul 08	1229 est	Silking	1053-1521
+Jul 09	1251 est	Silking	1066-1547
+Jul 10	1274 est	Silking	1085-1574
+Jul 11	1297 est	Silking	1110-1599
+Jul 12	1319 est	Silking	1138-1618
+Jul 13	1341 est	Silking	1165-1631
+Jul 14	1363 est	Silking	1187-1644
+Jul 15	1386 est	Silking	1209-1661
+Jul 16	1408 est	Silking	1230-1685
+Jul 17	1432 est	Silking	1253-1714
+Jul 18	1457 est	Silking	1279-1741
+Jul 19	1481 est	Silking	1307-1771
+Jul 20	1504 est	Silking	1328-1801
+Jul 21	1527 est	Silking	1344-1829
+Jul 22	1550 est	Silking	1362-1857
+Jul 23	1571 est		1382-1886
+Jul 24	1593 est		1402-1913
+Jul 25	1615 est		1418-1942
+Jul 26	1638 est		1434-1971
+Jul 27	1660 est		1455-1999
+Jul 28	1682 est		1472-2026
+Jul 29	1704 est		1491-2055
+Jul 30	1726 est		1509-2084
+Jul 31	1748 est		1524-2114
+Aug 01	1769 est		1540-2144
+Aug 02	1792 est		1557-2172
+Aug 03	1814 est		1577-2196
+Aug 04	1837 est		1598-2214
+Aug 05	1859 est		1619-2233
+Aug 06	1879 est		1635-2258
+Aug 07	1900 est		1656-2283
+Aug 08	1921 est		1684-2305
+Aug 09	1943 est		1705-2326
+Aug 10	1965 est		1726-2349
+Aug 11	1986 est		1746-2374
+Aug 12	2006 est		1767-2398
+Aug 13	2027 est		1788-2421
+Aug 14	2047 est		1809-2447
+Aug 15	2067 est		1828-2475
+Aug 16	2088 est		1842-2499
+Aug 17	2109 est		1857-2520
+Aug 18	2130 est		1877-2536
+Aug 19	2151 est		1895-2559
+Aug 20	2169 est		1913-2579
+Aug 21	2188 est		1927-2603
+Aug 22	2209 est		1942-2627
+Aug 23	2229 est	Blacklayer	1963-2646
+Aug 24	2249 est	Blacklayer	1988-2667
+Aug 25	2269 est	Blacklayer	2008-2689
+Aug 26	2290 est	Blacklayer	2023-2705
+Aug 27	2310 est	Blacklayer	2038-2720
+Aug 28	2330 est	Blacklayer	2051-2730
+Aug 29	2349 est	Blacklayer	2060-2743
+Aug 30	2369 est	Blacklayer	2068-2757
+Aug 31	2387 est	Blacklayer	2077-2777
+Sep 01	2404 est	Blacklayer	2086-2799
+Sep 02	2422 est	Blacklayer	2098-2821
+Sep 03	2441 est	Blacklayer	2110-2839
+Sep 04	2459 est	Blacklayer	2123-2853
+Sep 05	2477 est	Blacklayer	2137-2864
+Sep 06	2494 est	Blacklayer	2151-2874
+Sep 07	2513 est	Blacklayer	2167-2886
+Sep 08	2529 est	Blacklayer	2182-2900
+Sep 09	2546 est	Blacklayer	2198-2915
+Sep 10	2561 est	Blacklayer	2214-2930
+Sep 11	2577 est	Blacklayer	2231-2949
+Sep 12	2593 est	Blacklayer	2246-2974
+Sep 13	2609 est	Blacklayer	2261-2991
+Sep 14	2624 est	Blacklayer	2275-3005
+Sep 15	2638 est	Blacklayer	2290-3019
+Sep 16	2650 est	Blacklayer	2305-3036
+Sep 17	2663 est	Blacklayer	2318-3059
+Sep 18	2677 est	Blacklayer	2333-3086
+Sep 19	2692 est	Blacklayer	2349-3109
+Sep 20	2705 est	Blacklayer	2364-3120
+Sep 21	2717 est	Blacklayer	2377-3130
+Sep 22	2729 est	Blacklayer	2388-3143
+Sep 23	2739 est	Blacklayer	2403-3158
+Sep 24	2749 est	Blacklayer	2416-3168
+Sep 25	2760 est	Blacklayer	2428-3178
+Sep 26	2771 est	Blacklayer	2438-3192
+Sep 27	2782 est	Blacklayer	2451-3209
+Sep 28	2793 est	Blacklayer	2458-3225
+Sep 29	2804 est	Blacklayer	2465-3238
+Sep 30	2815 est	Blacklayer	2472-3254
+Oct 01	2827 est	Blacklayer	2476-3269
+Oct 02	2839 est	Blacklayer	2476-3278
+Oct 03	2848 est	Blacklayer	2477-3284
+Oct 04	2857 est	Blacklayer	2481-3291
+Oct 05	2866 est	Blacklayer	2487-3293
+Oct 06	2876 est	Blacklayer	2492-3295
+Oct 07	2885 est	Blacklayer	2499-3300
+Oct 08	2895 est	Blacklayer	2499-3305
+Oct 09	2902 est	Blacklayer	2499-3309
+Oct 10	2909 est	Blacklayer	2499-3318
+Oct 11	2916 est	Blacklayer	2499-3326
+Oct 12	2924 est	Blacklayer	2499-3330
+Oct 13	2931 est	Blacklayer	2499-3334
+Oct 14	2938 est	Blacklayer	2499-3342
+Oct 15	2945 est	Blacklayer	2499-3353
+Oct 16	2953 est	Blacklayer	2499-3365
+Oct 17	2959 est	Blacklayer	2499-3374
+Oct 18	2966 est	Blacklayer	2503-3379
+Oct 19	2971 est	Blacklayer	2511-3382
+Oct 20	2975 est	Blacklayer	2520-3383
+Oct 21	2981 est	Blacklayer	2530-3383
+Oct 22	2986 est	Blacklayer	2530-3385
+Oct 23	2990 est	Blacklayer	2530-3386
+Oct 24	2996 est	Blacklayer	2533-3386
+Oct 25	3000 est	Blacklayer	2536-3386
+Oct 26	3005 est	Blacklayer	2537-3388
+Oct 27	3009 est	Blacklayer	2539-3389
+Oct 28	3014 est	Blacklayer	2542-3390
+Oct 29	3018 est	Blacklayer	2548-3390
+Oct 30	3023 est	Blacklayer	2552-3390
+Oct 31	3028 est	Blacklayer	2553-3390
+Nov 01	3031 est	Blacklayer	2560-3396
+Nov 02	3035 est	Blacklayer	2562-3398
+Nov 03	3038 est	Blacklayer	2562-3401
+Nov 04	3041 est	Blacklayer	2562-3407
+Nov 05	3044 est	Blacklayer	2565-3409
+Nov 06	3046 est	Blacklayer	2574-3409
+Nov 07	3048 est	Blacklayer	2584-3409
+Nov 08	3052 est	Blacklayer	2596-3409
+Nov 09	3055 est	Blacklayer	2601-3410
+Nov 10	3057 est	Blacklayer	2606-3410
+Nov 11	3059 est	Blacklayer	2610-3410
+Nov 12	3061 est	Blacklayer	2612-3410
+Nov 13	3062 est	Blacklayer	2614-3410
+Nov 14	3064 est	Blacklayer	2614-3413
+Nov 15	3066 est	Blacklayer	2614-3417
+Nov 16	3067 est	Blacklayer	2614-3425
+Nov 17	3068 est	Blacklayer	2614-3425
+Nov 18	3069 est	Blacklayer	2614-3425
+Nov 19	3071 est	Blacklayer	2614-3425
+Nov 20	3072 est	Blacklayer	2615-3425
+Nov 21	3073 est	Blacklayer	2616-3425
+Nov 22	3074 est	Blacklayer	2618-3425
+Nov 23	3075 est	Blacklayer	2621-3425
+Nov 24	3076 est	Blacklayer	2621-3429
+Nov 25	3076 est	Blacklayer	2621-3432
+Nov 26	3077 est	Blacklayer	2621-3432
+Nov 27	3078 est	Blacklayer	2621-3432
+Nov 28	3078 est	Blacklayer	2623-3432
+Nov 29	3079 est	Blacklayer	2623-3432
+Nov 30	3079 est	Blacklayer	2623-3432
+Dec 01	3079 est	Blacklayer	2628-3432
+Dec 02	3080 est	Blacklayer	2628-3432
+Dec 03	3081 est	Blacklayer	2628-3434
+Dec 04	3081 est	Blacklayer	2628-3434
+Dec 05	3082 est	Blacklayer	2628-3434
+Dec 06	3082 est	Blacklayer	2628-3434
+Dec 07	3082 est	Blacklayer	2628-3434
+Dec 08	3082 est	Blacklayer	2628-3434
+Dec 09	3082 est	Blacklayer	2628-3434
+Dec 10	3082 est	Blacklayer	2628-3434
+Dec 11	3082 est	Blacklayer	2628-3434
+Dec 12	3082 est	Blacklayer	2628-3434
+Dec 13	3082 est	Blacklayer	2628-3434
+Dec 14	3082 est	Blacklayer	2628-3434
+Dec 15	3083 est	Blacklayer	2628-3434
+Dec 16	3083 est	Blacklayer	2628-3434
+Dec 17	3083 est	Blacklayer	2628-3434
+Dec 18	3083 est	Blacklayer	2628-3434
+Dec 19	3083 est	Blacklayer	2628-3434
+Dec 20	3083 est	Blacklayer	2628-3435
+Dec 21	3083 est	Blacklayer	2628-3435
+Dec 22	3083 est	Blacklayer	2628-3435
+Dec 23	3083 est	Blacklayer	2628-3435
+Dec 24	3083 est	Blacklayer	2628-3435
+Dec 25	3083 est	Blacklayer	2628-3435
+Dec 26	3083 est	Blacklayer	2628-3435
+Dec 27	3083 est	Blacklayer	2628-3435
+Dec 28	3083 est	Blacklayer	2628-3435
+Dec 29	3083 est	Blacklayer	2628-3435
+Dec 30	3084 est	Blacklayer	2628-3435
+Dec 31	3084 est	Blacklayer	
