@@ -218,7 +218,7 @@ send.mail(from = fromAddr,
           subject = paste("GDD Update for ",Sys.Date(),sep=""),
           body = "See attached.",
           html = TRUE,
-          smtp = list(host.name = "email-smtp.us-east-1.amazonaws.com", port = 587, user.name = emailUser, passwd = emailPassword , ssl = TRUE),
+          smtp = list(host.name = "smtp.sendgrid.net", port = 465, user.name = emailUser, passwd = emailPassword , ssl = TRUE),
           attach.files = c(stageEstimate_outputName,csv_outputName),
           authenticate = TRUE,
           send = TRUE)
