@@ -33,6 +33,9 @@ cat(paste(startingCronTaskDir,"\n",sep=""),file=paste(homeDir,"/log.txt",sep="")
 lockCheck = system("mkdir lockfileFolder")
 cat(paste("check value of folder: ",lockCheck,"\n",sep=""),file=paste(homeDir,"/log.txt",sep=""),append=T)
 
+source("Scripts/send_email_mavrx.R")
+
+
 response = system("df -k",intern=T)
 freeSpace = as.numeric(strsplit(response[2]," +")[[1]][4])
 
