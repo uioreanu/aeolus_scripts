@@ -30,6 +30,7 @@ gdd_calculate = function(weather,max_threshold,min_threshold){
 	return(output)
 }
 
+setwd("~/Desktop/aeolus_scripts/gddGetter")
 
 cornDates = read.csv("Input/corn_imaging_periods.csv",stringsAsFactors=F)
 

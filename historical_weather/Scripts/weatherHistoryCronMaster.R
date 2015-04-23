@@ -43,12 +43,11 @@ if(lockCheck ==0 & freeSpace>10000){ #not another one of these tasks running and
 		  setwd(homeDir)
 
 		  if(inherits(calculateAndEmailGDDProgress,"error")==F){
-		  	 cat(paste("error with gdd progress update: ",Sys.time(),"\n",sep=""),file=paste(homeDir,"/log.txt",sep=""),append=T)
+				cat(paste("finished, removing lockfile: ",Sys.time(),"\n",sep=""),file=paste(homeDir,"/log.txt",sep=""),append=T)
+		  		unlink("lockfileFolder",recursive=T)	
 
 		  }else{
- 			cat(paste("finished, removing lockfile: ",Sys.time(),"\n",sep=""),file=paste(homeDir,"/log.txt",sep=""),append=T)
-
-		  	unlink("lockfileFolder",recursive=T)	
+ 				cat(paste("error with gdd progress update: ",Sys.time(),"\n",sep=""),file=paste(homeDir,"/log.txt",sep=""),append=T)
 		  }
 		}else{
 		  setwd(homeDir)
