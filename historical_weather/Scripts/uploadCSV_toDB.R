@@ -43,7 +43,7 @@ db = dbConnect(MySQL(), user=dbUsr ,password=dbPass ,dbname=dbName,host=dbHost)
     
     
    finishedDates = unique(c(finishedDates,theseDates))
-   query = paste("LOAD DATA LOCAL INFILE '~/Desktop/Weather/weatherCSV/",eachFile,"' INTO TABLE weatherdata FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n' IGNORE 1 LINES SET id = NULL",sep="")
+   query = paste("LOAD DATA LOCAL INFILE '",homeDir,"/weatherCSV/",eachFile,"' INTO TABLE weatherdata FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n' IGNORE 1 LINES SET id = NULL",sep="")
     
     rs = dbSendQuery(db, query)
     write.csv(finishedDates,paste(homeDir,"/finishedDates.txt",sep=""),row.names=F)

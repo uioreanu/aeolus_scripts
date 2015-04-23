@@ -10,6 +10,7 @@ library(zoo)
 library(rjson)
 library(automap)  #best kriging library, but kriging has extrapolation problems. Maybe use kriging for temperature and inverse distance for rainfall
 library(rgeos)
+
 homeDir = "~/Desktop/aeolus_scripts/historical_weather"
 setwd(homeDir)
 
