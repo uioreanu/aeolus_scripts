@@ -38,7 +38,9 @@ if(lockCheck ==0 & freeSpace>10000){ #not another one of these tasks running and
 		  cat(paste("finished, removing lockfile: ",Sys.time(),"\n",sep=""),file=paste(homeDir,"/log.txt",sep=""),append=T)
 		  
 		  setwd(homeDir)
-		  
+		  unlink("lockfileFolder",recursive=T)	
+
+		  if(F){
 		  calculateAndEmailGDDProgress = tryCatch(source("../gddGetter/Scripts/gdd_getter.R"),error=function(e) e)
 		  setwd(homeDir)
 
@@ -49,6 +51,7 @@ if(lockCheck ==0 & freeSpace>10000){ #not another one of these tasks running and
 		  }else{
  				cat(paste("error with gdd progress update: ",Sys.time(),"\n",sep=""),file=paste(homeDir,"/log.txt",sep=""),append=T)
 		  }
+		 }
 		}else{
 		  setwd(homeDir)
 		  errorText = paste("cron task call script had an error on uploading, blocking future tasks until resolved: ",Sys.time(),"\n",sep="")
