@@ -1,11 +1,12 @@
 homeDir = "~/Desktop/aeolus_scripts/severe_weather_forecast"
 setwd(homeDir )
 
-list.of.packages = c("rgdal","rgeos","RMySQL")
+list.of.packages = c("sp","rgdal","rgeos","RMySQL")
 
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages,repos="http://cran.rstudio.com/")
 
+library(sp)
 library(rgdal)
 library(rgeos)
 library(RMySQL)
