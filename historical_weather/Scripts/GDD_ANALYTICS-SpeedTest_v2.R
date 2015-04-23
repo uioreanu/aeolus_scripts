@@ -321,6 +321,6 @@ print(endTimeAll-startYear)
 }
 
 	
-dbDisconnect(db)
+
 
 #}
