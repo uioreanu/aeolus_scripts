@@ -26,11 +26,13 @@ if(lockCheck ==0 & freeSpace>10000){ #not another one of these tasks running and
 	
 	result=T
 	result = tryCatch(source("Scripts/GDD_ANALYTICS-SpeedTest_v2.R"),error=function(e) e)  #this would be the true master script here, any error would get filtered here
-
+    
 	#only remove lockfile if runs successfully
 	#make set back to starting directort
 	if(inherits(result,"error")==F){
 		setwd(homeDir )
+		cat(paste("main task finished succesfully, moving to upload result ",Sys.time(),"\n",sep=""),file=paste(homeDir,"/log.txt",sep=""),append=T)
+
 		resultUpload = tryCatch(source("Scripts/uploadCSV_toDB.R"),error=function(e) e)  #this would be the true master script here, any error would get filtered here
 		if(inherits(resultUpload,"error")==F){
 		  cat(paste("finished, removing lockfile: ",Sys.time(),"\n",sep=""),file=paste(homeDir,"/log.txt",sep=""),append=T)
@@ -39,7 +41,7 @@ if(lockCheck ==0 & freeSpace>10000){ #not another one of these tasks running and
 		  unlink("lockfileFolder",recursive=T)	
 		}else{
 		  setwd(homeDir)
-		  errorText = paste("cron task call script had an error, blocking future tasks until resolved: ",Sys.time(),"\n",sep="")
+		  errorText = paste("cron task call script had an error on uploading, blocking future tasks until resolved: ",Sys.time(),"\n",sep="")
 		  vars = fromJSON(file="environment_variables.json")
 		  emailUser = vars[["EMAIL_USER"]]
 		  emailPassword = vars[["EMAIL_PASSWORD"]]
@@ -58,7 +60,7 @@ if(lockCheck ==0 & freeSpace>10000){ #not another one of these tasks running and
 	#within corn task, if the cront ask is updating records in database that it used for an input, then make sure those records are the same before they get updated 
 	}else{
 		  setwd(homeDir)
-		  errorText = paste("cron task call script had an error, blocking future tasks until resolved: ",Sys.time(),"\n",sep="")
+		  errorText = paste("cron task main call script had an error, blocking future tasks until resolved: ",Sys.time(),"\n",sep="")
 		  vars = fromJSON(file="environment_variables.json")
 		  emailUser = vars[["EMAIL_USER"]]
 		  emailPassword = vars[["EMAIL_PASSWORD"]]
