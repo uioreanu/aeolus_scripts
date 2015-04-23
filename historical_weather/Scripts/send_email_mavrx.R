@@ -12,7 +12,7 @@ sendEmail = function(toAddr,fromAddr,username,password,subjectText,bodyText){
 	          body = bodyText,
 	          html = TRUE,
 	          smtp = list(host.name = "email-smtp.us-east-1.amazonaws.com", port = 587, user.name = username, passwd = password, ssl = TRUE),
-	          attach.files = stageEstimate_outputName,
+	          attach.files = NULL,
 	          authenticate = TRUE,
 	          send = TRUE)
 }
