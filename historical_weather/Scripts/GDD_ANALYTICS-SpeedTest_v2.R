@@ -13,6 +13,7 @@ library(rgeos)
 
 homeDir = "~/Desktop/aeolus_scripts/historical_weather"
 setwd(homeDir)
+if(file.exists("weatherCSV")==F) dir.create("weatherCSV")
 
 rawStations = read.csv("station_locationByID.csv",stringsAsFactors=F)
 colnames(rawStations) =c("ID","Lat","Lng","Altitude","State","Name","Something")
