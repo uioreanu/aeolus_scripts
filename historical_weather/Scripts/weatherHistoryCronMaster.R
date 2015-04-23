@@ -49,7 +49,7 @@ if(lockCheck ==0 & freeSpace>10000){ #not another one of these tasks running and
 
 	
 		  cat(errorText ,file=paste(homeDir,"/log.txt",sep=""),append=T)
-		  sendEmail(fromAdd, toAddr,emailUser,emailPassword ,"Weather History Cron Task Error During Upload",errorText)
+		  sendEmail(fromAddr, toAddr,emailUser,emailPassword ,"Weather History Cron Task Error During Upload",errorText)
 	
 
 		  cat(paste("cron task call script had an error on csv upload, blocking future tasks until resolved: ",Sys.time(),"\n",sep=""),file=paste(homeDir,"/log.txt",sep=""),append=T)
@@ -66,7 +66,7 @@ if(lockCheck ==0 & freeSpace>10000){ #not another one of these tasks running and
 		  toAddr= vars[["TO"]]
 
 		  cat(errorText ,file=paste(homeDir,"/log.txt",sep=""),append=T)
-		  sendEmail(fromAdd, toAddr,emailUser,emailPassword ,"Weather History Cron Task Error During Processing",errorText)
+		  sendEmail(fromAddr, toAddr,emailUser,emailPassword ,"Weather History Cron Task Error During Processing",errorText)
 	
 		  cat(paste("cron task call script had an error, blocking future tasks until resolved: ",Sys.time(),"\n",sep=""),file=paste(homeDir,"/log.txt",sep=""),append=T)
 		}
