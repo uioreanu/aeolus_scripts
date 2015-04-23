@@ -1,7 +1,16 @@
 homeDir = "~/Desktop/aelous_scripts/severe_weather_forecast"
 setwd(homeDir )
+
+
+list.of.packages = c("rgdal","rgeos","RMySQL")
+
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+if(length(new.packages)) install.packages(new.packages,repos="http://cran.rstudio.com/")
+
 library(rgdal)
 library(rgeos)
+library(RMySQL)
+
 #http://www.spc.noaa.gov/
 #shapefiles are at:
 #http://www.spc.noaa.gov/products/outlook/archive/[year]/day1otlk_[yearmonthday]_2000-shp.zip
@@ -88,7 +97,6 @@ for(urlType in 1:nrow(urlTypes)){
 
 
 currentDate = Sys.Date()
-library(RMySQL)
 
 ENV = fromJSON(file="environment_variables.json")
 dbPass = ENV[["PASSWD"]]
