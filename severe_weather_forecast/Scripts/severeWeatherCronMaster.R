@@ -19,7 +19,7 @@
 #maybe a tryCatch around this whole thing?...
 #judge available memory as well?
 ###IMPORTANT###NEED TO SPECIFY CURRENT FOLDER FOR EACH SCRIPT, wont use relative to this script location unless you cd to that location as part of the cron task itself (seperate command line commands with &&)
-homeDir = "~/Desktop/aeolus_scripts/severeWeatherOutlook"
+homeDir = "~/Desktop/aeolus_scripts/severe_weather_forecast"
 setwd(homeDir)
 startingCronTaskDir = getwd()
 list.of.packages = c("rjson")
