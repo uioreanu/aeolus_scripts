@@ -179,6 +179,7 @@ for(yearSelect in c(2015:2010)){
 		    keeps = grep(tempType,dateRestrictedDat[,3],perl=T)
 		    
 		    dat = dateRestrictedDat[keeps,]
+		    if(nrow(dat)<3) break
 		      
 		    matches = which(rawStations[,1] %in% unique(dat[,1]))
 		    stations = rawStations[matches,]
