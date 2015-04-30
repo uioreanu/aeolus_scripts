@@ -11,8 +11,8 @@ sendEmail = function(toAddr,fromAddr,username,password,subjectText,bodyText){
 	          subject = subjectText,
 	          body = bodyText,
 	          html = TRUE,
-	          smtp = list(host.name = "email-smtp.us-east-1.amazonaws.com", port = 587, user.name = username, passwd = password, ssl = TRUE),
-	          attach.files = NULL,
+	          smtp = list(host.name =  "smtp.sendgrid.net", port = 2525, user.name = username, passwd = password, ssl = F),
+	          attach.files = c("backup.log","log.txt"),
 	          authenticate = TRUE,
 	          send = TRUE)
 }

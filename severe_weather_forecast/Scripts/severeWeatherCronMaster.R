@@ -16,6 +16,21 @@
 
 
 
+sendEmailError = function(errorText,errorSubject){
+	
+	  vars = fromJSON(file="environment_variables.json")
+	  emailUser = vars[["EMAIL_USER"]]
+	  emailPassword = vars[["EMAIL_PASSWORD"]]
+	  fromAddr= vars[["FROM"]]
+	  toAddr= vars[["TO"]]
+
+	  cat(errorText ,file=paste(homeDir,"/log.txt",sep=""),append=T)
+	  sendEmail(fromAddr, toAddr,emailUser,emailPassword ,"Weather History Cron Task Error During Upload",errorText)
+
+}
+
+
+
 #maybe a tryCatch around this whole thing?...
 #judge available memory as well?
 ###IMPORTANT###NEED TO SPECIFY CURRENT FOLDER FOR EACH SCRIPT, wont use relative to this script location unless you cd to that location as part of the cron task itself (seperate command line commands with &&)
@@ -59,15 +74,10 @@ if(lockCheck ==0 & freeSpace>10000){ #not another one of these tasks running and
 	}else{
 		setwd(homeDir)
 		errorText = paste("cron task call script had an error, blocking future tasks until resolved: ",Sys.time(),"\n",sep="")
-		vars = fromJSON(file="environment_variables.json")
-		emailUser = vars[["EMAIL_USER"]]
-		emailPassword = vars[["EMAIL_PASSWORD"]]
-		fromAddr= vars[["FROM"]]
-		toAddr= vars[["TO"]]
-
+		errorSubject = "Severe weather cron failure"
+		sendEmailError( errorText,errorSubject) 
+		
 		cat(errorText ,file=paste(homeDir,"/log.txt",sep=""),append=T)
-		sendEmail(fromAdd, toAddr,emailUser,emailPassword ,"Severe Weather Outlook Cron Task Error During Processing",errorText)
-	
 		cat(paste("cron task call script had an error, blocking future tasks until resolved: ",Sys.time(),"\n",sep=""),file=paste(homeDir,"/log.txt",sep=""),append=T)
 
 		}

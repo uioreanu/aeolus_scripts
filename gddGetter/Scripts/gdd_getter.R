@@ -254,17 +254,14 @@ if(F){
 	
 	#make these read from external
 	
-	emailUser = ENV[["EMAIL_USER"]]
-	emailPassword = ENV[["EMAIL_PASSWORD"]]
-	fromAddr  = ENV[["FROM"]]
-	toAddr = ENV[["TO"]]
+	
 			
 	send.mail(from = fromAddr,
 	          to = toAddr,
 	          subject = paste("GDD Update for ",Sys.Date(),sep=""),
 	          body = "See attached.",
 	          html = TRUE,
-	          smtp = list(host.name = "smtp.sendgrid.net", port = 2525, user.name = emailUser, passwd = emailPassword , ssl = T),
+	          smtp = list(host.name = "smtp.sendgrid.net", port = 2525, user.name = emailUser, passwd = emailPassword , ssl = F),
 	          attach.files = NULL,#c(stageEstimate_outputName,csv_outputName),
 	          authenticate = TRUE,
 	          send = TRUE)
@@ -280,7 +277,9 @@ dbDisconnect(db)
 #cycle through list, create folder with sunlist name
 #determine color scheme for fields in the subfolder, with red being needs imaging soon, green being far away
 
-tf <- paste("Output/All_Imaging_Periods_",as.character(Sys.Date()),".kml",sep="")
+KML_OutputName = paste("Output/All_Imaging_Periods_",as.character(Sys.Date()),".kml",sep="")
+
+tf <- KML_OutputName 
 kmlFile <- file(tf, "w")
 cat(kmlPolygon(kmlname="All_Imaging_Periods")$header, file=kmlFile, sep="\n")
 
@@ -354,7 +353,25 @@ names(stageList)[z])
 
 colnames(allOut) = c("Field Name","Field ID","Plant Date","Days from Plant to Imaging Period","Days from Current Day until Imaging event","Predicted Date of Imaing Event","Imaging Event Name")
 
-write.csv(allOut,paste("Output/allFieldsDates_",Sys.Date(),".csv",sep=""),row.names=F)
+allDatesCSV_Name = paste("Output/allFieldsDates_",Sys.Date(),".csv",sep="")
+write.csv(allOut,allDatesCSV_Name ,row.names=F)
+
+
+emailUser = ENV[["EMAIL_USER"]]
+emailPassword = ENV[["EMAIL_PASSWORD"]]
+fromAddr  = ENV[["FROM"]]
+toAddr = ENV[["TO"]]
+
+send.mail(from = fromAddr,
+          to = toAddr,
+          subject = paste("GDD Update for ",Sys.Date(),sep=""),
+          body = "See attached.",
+          html = TRUE,
+          smtp = list(host.name = "smtp.sendgrid.net", port = 2525, user.name = emailUser, passwd = emailPassword , ssl = F),
+          attach.files = c(KML_OutputName ,allDatesCSV_Name),
+          authenticate = TRUE,
+          send = TRUE)
+
 
 
 #make a kml output to just show all fields as well

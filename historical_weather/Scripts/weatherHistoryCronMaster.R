@@ -1,4 +1,20 @@
 
+sendEmailError = function(errorText,errorSubject){
+	
+	  #errorText = paste("cron task call script had an error on uploading, blocking future tasks until resolved: ",Sys.time(),"\n",sep="")
+	  vars = fromJSON(file="environment_variables.json")
+	  emailUser = vars[["EMAIL_USER"]]
+	  emailPassword = vars[["EMAIL_PASSWORD"]]
+	  fromAddr= vars[["FROM"]]
+	  toAddr= vars[["TO"]]
+
+
+	  cat(errorText ,file=paste(homeDir,"/log.txt",sep=""),append=T)
+	  sendEmail(fromAddr, toAddr,emailUser,emailPassword ,"Weather History Cron Task Error During Upload",errorText)
+	
+}
+
+
 homeDir = "~/Desktop/aeolus_scripts/historical_weather"  #dont end this with a slash
 setwd(homeDir)
 startingCronTaskDir = getwd()
@@ -40,33 +56,31 @@ if(lockCheck ==0 & freeSpace>10000){ #not another one of these tasks running and
 		  setwd(homeDir)
 		  unlink("lockfileFolder",recursive=T)	
 
-		  if(F){
-		  calculateAndEmailGDDProgress = tryCatch(source("../gddGetter/Scripts/gdd_getter.R"),error=function(e) e)
-		  setwd(homeDir)
+		  if(T){
+		  	calculateAndEmailGDDProgress = tryCatch(source("../gddGetter/Scripts/gdd_getter.R"),error=function(e) e)
+		  	setwd(homeDir)
 
-		  if(inherits(calculateAndEmailGDDProgress,"error")==F){
+		  	if(inherits(calculateAndEmailGDDProgress,"error")==F){
 				cat(paste("finished, removing lockfile: ",Sys.time(),"\n",sep=""),file=paste(homeDir,"/log.txt",sep=""),append=T)
 		  		unlink("lockfileFolder",recursive=T)	
 
-		  }else{
+		  	}else{
+		  		errorText = paste("Cron task failed during upload of db: ",Sys.time(),"\n",sep="")
+		 		errorSubject = "GDD calculator error"
+				  
+		  		sendEmailError( errorText,errorSubject) 
  				cat(paste("error with gdd progress update: ",Sys.time(),"\n",sep=""),file=paste(homeDir,"/log.txt",sep=""),append=T)
-		  }
+		  	}
 		 }
 		}else{
 		  setwd(homeDir)
-		  errorText = paste("cron task call script had an error on uploading, blocking future tasks until resolved: ",Sys.time(),"\n",sep="")
-		  vars = fromJSON(file="environment_variables.json")
-		  emailUser = vars[["EMAIL_USER"]]
-		  emailPassword = vars[["EMAIL_PASSWORD"]]
-		  fromAddr= vars[["FROM"]]
-		  toAddr= vars[["TO"]]
-
-
+		  errorText = paste("Cron task failed during upload of csv to weather db: ",Sys.time(),"\n",sep="")
+		  errorSubject = "Historical weather upload error"
+				  
+		  sendEmailError( errorText,errorSubject) 
 	
-		  cat(errorText ,file=paste(homeDir,"/log.txt",sep=""),append=T)
-		  sendEmail(fromAddr, toAddr,emailUser,emailPassword ,"Weather History Cron Task Error During Upload",errorText)
 	
-
+		  cat(errorText ,file=paste(homeDir,"/log.txt",sep=""),append=T)	
 		  cat(paste("cron task call script had an error on csv upload, blocking future tasks until resolved: ",Sys.time(),"\n",sep=""),file=paste(homeDir,"/log.txt",sep=""),append=T)
 		  
 		}
@@ -74,15 +88,12 @@ if(lockCheck ==0 & freeSpace>10000){ #not another one of these tasks running and
 	}else{
 		  setwd(homeDir)
 		  errorText = paste("cron task main call script had an error, blocking future tasks until resolved: ",Sys.time(),"\n",sep="")
-		  vars = fromJSON(file="environment_variables.json")
-		  emailUser = vars[["EMAIL_USER"]]
-		  emailPassword = vars[["EMAIL_PASSWORD"]]
-		  fromAddr= vars[["FROM"]]
-		  toAddr= vars[["TO"]]
+		  errorSubject = "Weather History Cron Task Error During Processing"
+				  
+		  sendEmailError( errorText,errorSubject) 
+
 
 		  cat(errorText ,file=paste(homeDir,"/log.txt",sep=""),append=T)
-		  sendEmail(fromAddr, toAddr,emailUser,emailPassword ,"Weather History Cron Task Error During Processing",errorText)
-	
 		  cat(paste("cron task call script had an error, blocking future tasks until resolved: ",Sys.time(),"\n",sep=""),file=paste(homeDir,"/log.txt",sep=""),append=T)
 		}
 }else{
