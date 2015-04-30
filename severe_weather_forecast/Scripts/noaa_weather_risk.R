@@ -163,9 +163,39 @@ setwd(homeDir )
 
 write.csv(fieldSummary,paste(homeDir,"/severWeatherOutlookByfield.csv",sep=""),row.names=F)
 
-query = paste("LOAD DATA LOCAL INFILE '",homeDir,"/severWeatherOutlookByfield.csv' INTO TABLE weatherforecast FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n' IGNORE 1 LINES SET id = NULL",sep="")
+
+#change this to an update, and run multiple times a day?
+for(i in 1:nrow(fieldSummary)){
+	thisDate = as.Date(fieldSummary[i,"date"])
+	thisFieldID =  fieldSummary[i,"field_id"]
+	thisForecastType = fieldSummary[i,"forecast_type"]
+	thisPredictionDate = as.Date(fieldSummary[i,"prediction_date"])
+	thisForecastValue = fieldSummary[i,"forecast_value"]
+	query= paste("select * from weatherforecast where field_id ='",thisFieldID,"' AND date ='",thisDate,"' AND prediction_date ='",thisPredictionDate,"' LIMIT 1",sep="")
+	rs = dbSendQuery(db, query)  #AND forecast_type='",thisForecastType,"' 
+	result =fetch(rs, n=-1)
+	if(nrow(result ==1)){
+
+	query = paste("UPDATE weatherforecast set forecast_value ='",thisForecastValue,"' where field_id ='",thisFieldID,"' AND date ='",thisDate,"' AND forecast_type='",thisForecastType,"' AND prediction_date ='",thisPredictionDate,"' LIMIT 1",sep="")
+	rs = dbSendQuery(db, query)
+	}else if(nrow(result)<1){
+		#insert
+		query = paste("INSERT INTO weatherforecast (id,field_id,date,forecast_type,forecast_value,prediction_date) VALUES ('",NULL,"','",thisFieldID,"','",thisDate,"','",thisForecastType,"','",thisForecastValue,"','",thisPredictionDate,"')",sep="")
+		rs = dbSendQuery(db, query)
+
+
+
+		
+		
+	}
+	
+	
+}
+
+
+#query = paste("LOAD DATA LOCAL INFILE '",homeDir,"/severWeatherOutlookByfield.csv' INTO TABLE weatherforecast FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n' IGNORE 1 LINES SET id = NULL",sep="")
  
-rs = dbSendQuery(db, query)
+#rs = dbSendQuery(db, query)
 
 dbDisconnect(db)
 
