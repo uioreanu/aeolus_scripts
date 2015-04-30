@@ -1,7 +1,7 @@
 homeDir = "~/Desktop/aeolus_scripts/severe_weather_forecast"
 setwd(homeDir )
 
-list.of.packages = c("sp","rgdal","rgeos","RMySQL")
+list.of.packages = c("sp","rgdal","rgeos","RMySQL","rjson")
 
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages,repos="http://cran.rstudio.com/")
@@ -10,6 +10,7 @@ library(sp)
 library(rgdal)
 library(rgeos)
 library(RMySQL)
+library(rjson)
 
 #http://www.spc.noaa.gov/
 #shapefiles are at:
@@ -163,6 +164,7 @@ setwd(homeDir )
 
 write.csv(fieldSummary,paste(homeDir,"/severWeatherOutlookByfield.csv",sep=""),row.names=F)
 
+print("begin upload")
 
 #change this to an update, and run multiple times a day?
 for(i in 1:nrow(fieldSummary)){
@@ -180,7 +182,7 @@ for(i in 1:nrow(fieldSummary)){
 	rs = dbSendQuery(db, query)
 	}else if(nrow(result)<1){
 		#insert
-		query = paste("INSERT INTO weatherforecast (id,field_id,date,forecast_type,forecast_value,prediction_date) VALUES ('",NULL,"','",thisFieldID,"','",thisDate,"','",thisForecastType,"','",thisForecastValue,"','",thisPredictionDate,"')",sep="")
+		query = paste("INSERT INTO weatherforecast (id,field_id,date,forecast_type,forecast_value,prediction_date) VALUES ('",NA,"','",thisFieldID,"','",thisDate,"','",thisForecastType,"','",thisForecastValue,"','",thisPredictionDate,"')",sep="")
 		rs = dbSendQuery(db, query)
 
 
@@ -191,7 +193,7 @@ for(i in 1:nrow(fieldSummary)){
 	
 	
 }
-
+print("completed upload")
 
 #query = paste("LOAD DATA LOCAL INFILE '",homeDir,"/severWeatherOutlookByfield.csv' INTO TABLE weatherforecast FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n' IGNORE 1 LINES SET id = NULL",sep="")
  
