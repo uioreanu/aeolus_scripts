@@ -198,6 +198,9 @@ print("completed upload")
 
 dbDisconnect(db)
 
+unlink("Input/Unzips/*",recursive=T)
+unlink("Input/Zips/*",recursive=T)
+
 
 
 #want the output to be a row for each field that has at least one weather event forecasts in next 3 days, and a column for every potential weather category and the weather value itself (if one exists)
