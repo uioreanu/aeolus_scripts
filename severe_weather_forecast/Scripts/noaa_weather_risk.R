@@ -176,24 +176,19 @@ for(i in 1:nrow(fieldSummary)){
 	query= paste("select * from weatherforecast where field_id ='",thisFieldID,"' AND date ='",thisDate,"' AND prediction_date ='",thisPredictionDate,"' LIMIT 1",sep="")
 	rs = dbSendQuery(db, query)  #AND forecast_type='",thisForecastType,"' 
 	result =fetch(rs, n=-1)
-	if(nrow(result ==1)){
+	if(nrow(result)==1){
 
 	query = paste("UPDATE weatherforecast set forecast_value ='",thisForecastValue,"' where field_id ='",thisFieldID,"' AND date ='",thisDate,"' AND forecast_type='",thisForecastType,"' AND prediction_date ='",thisPredictionDate,"' LIMIT 1",sep="")
 	rs = dbSendQuery(db, query)
-	result = fetch(rs, n=-1)
+	dbClearResult(rs)
 	}else if(nrow(result)<1){
 		#insert
 		query = paste("INSERT INTO weatherforecast (id,field_id,date,forecast_type,forecast_value,prediction_date) VALUES ('",NA,"','",thisFieldID,"','",thisDate,"','",thisForecastType,"','",thisForecastValue,"','",thisPredictionDate,"')",sep="")
 		rs = dbSendQuery(db, query)
-		result = fetch(rs, n=-1)
+		dbClearResult(rs)
 
-
-
-		
-		
 	}
-	
-	
+		
 }
 print("completed upload")
 
