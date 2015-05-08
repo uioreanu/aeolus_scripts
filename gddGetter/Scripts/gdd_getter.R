@@ -85,9 +85,7 @@ driveAuthSecret = ENV[["DRIVE"]]
 current_imaging_orders = c()
 current_imaging_orders = grabClientImageOrder(driveAuthUser ,driveAuthSecret )
 	   
- 
 db = dbConnect(MySQL(), user=ENV[["USER"]],password=ENV[["PASSWD"]],dbname=ENV[["DB"]],host=ENV[["HOST"]])
-
 
 query = paste("SELECT fieldID,name,defaultLatitude,defaultLongitude,planting_date from fields where is_active =1 AND planting_date != 'NULL'")
 rs = dbSendQuery(db, query)
@@ -102,7 +100,6 @@ for(eachFieldIndex in 1:nrow(allFields)){
 	lat =  allFields[eachFieldIndex,"defaultLatitude"]
 	lng =   allFields[eachFieldIndex,"defaultLongitude"]
 	plantDat =  allFields[eachFieldIndex,"planting_date"]
-
 
 	### #need to look up plant date, if that fails, look for USDA estimate for that state, if that fails use April 1 ###
 	if(is.null(plantDat)) next
@@ -133,7 +130,6 @@ for(eachFieldIndex in 1:nrow(allFields)){
 			if(nrow(cornDates)<1) next
 	}
 
-	
 	#stop("add here")
 	gdd_profile = gdd_calculate(weather,30,10)
 	stage_gdd_mapping = read.csv("Input/110DayCorn.csv",stringsAsFactors=F)  #need smarter way of choosing this reference
@@ -186,9 +182,7 @@ for(eachFieldIndex in 1:nrow(allFields)){
 		
 		#find date ranges for corndat in all of these and days till
 		
-	
-	
-	     GDDtilNextImage = cornDates[which(cornDates[,"GDD.End"]>totalGDD)[1],"GDD.Start"]-totalGDD
+	    GDDtilNextImage = cornDates[which(cornDates[,"GDD.End"]>totalGDD)[1],"GDD.Start"]-totalGDD
 	    daysTilNextImage = which(gdd_forecast_profile[,"Cumulative"]>GDDtilNextImage)[1]
 	     if(length( daysTilNextImage )){
 		     nextEventName = cornDates[which(cornDates[,"GDD.End"]>totalGDD)[1],"Imaging.Event"]
@@ -310,8 +304,6 @@ if(F){
 dbDisconnect(db)
 
 
-
-
 #have a list with each entry being a crop type/stage
 #cycle through list, create folder with sunlist name
 #determine color scheme for fields in the subfolder, with red being needs imaging soon, green being far away
@@ -362,10 +354,6 @@ for(k in 1:length(stageList)){
 		cat("</Folder>",   file=kmlFile, sep="\n")
 		
 		csvOut = write.csv(tempDat[,c("name","fieldID","dayTill","Imaging-Date")],paste("Output/",names(stageList)[k],"_",Sys.Date(),".csv",sep=""),row.names=F)
-
-	
-	
-	
 }
 
 cat(kmlPolygon()$footer, file=kmlFile, sep="\n")
