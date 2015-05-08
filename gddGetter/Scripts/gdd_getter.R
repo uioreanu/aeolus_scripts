@@ -59,7 +59,7 @@ ENV = fromJSON(file="environment_variables.json")
 db = dbConnect(MySQL(), user=ENV[["USER"]],password=ENV[["PASSWD"]],dbname=ENV[["DB"]],host=ENV[["HOST"]])
 
 
-query = paste("SELECT fieldID,name,defaultLatitude,defaultLongitude,planting_date from fields")
+query = paste("SELECT fieldID,name,defaultLatitude,defaultLongitude,planting_date from fields where is_active =1")
 rs = dbSendQuery(db, query)
 allFields = fetch(rs, n=-1)
 
@@ -351,7 +351,7 @@ names(stageList)[z])
 }
 
 
-colnames(allOut) = c("Field Name","Field ID","Plant Date","Days from Plant to Imaging Period","Days from Current Day until Imaging event","Predicted Date of Imaing Event","Imaging Event Name")
+colnames(allOut) = c("Field Name","Field ID","Plant Date","Days from Plant to Imaging Period","Days from Current Day until Imaging event","Predicted Date of Imaging Event","Imaging Event Name")
 
 allDatesCSV_Name = paste("Output/allFieldsDates_",Sys.Date(),".csv",sep="")
 write.csv(allOut,allDatesCSV_Name ,row.names=F)
@@ -371,6 +371,33 @@ send.mail(from = fromAddr,
           attach.files = c(KML_OutputName ,allDatesCSV_Name),
           authenticate = TRUE,
           send = TRUE)
+          
+
+#upload to google docs
+list.of.packages = c("devtools")
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+if(length(new.packages)) install.packages(new.packages,repos="http://cran.rstudio.com/")
+library(devtools)
+
+list.of.packages = c("RGoogleDocs")
+if(length(new.packages)) {
+	install_github("RGoogleDocs", "duncantl")
+}
+library(RGoogleDocs)
+          
+          
+driveAuthUser  = ENV[["FROM"]]    
+driveAuthSecret = ENV[["DRIVE"]]        
+ 
+ con = getGoogleDocsConnection(getGoogleAuth(driveAuthUser , driveAuthSecret ))
+ docs = getDocs(con)
+ docName = paste("GDDs_",as.character(Sys.Date()),sep="")
+ tmp <- uploadDoc(allDatesCSV_Name, con, name =  docName, type = "csv",folder=I(docs$GDDs@content["src"]))
+          
+          
+ #now send to google drive
+ 
+          
 
 
 
