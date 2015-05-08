@@ -18,7 +18,30 @@ removeOldFiles = list.files()
 for(eachFile in removeOldFiles){
 	unlink(eachFile)
 }
+
+
+grabClientImageOrder = function(driveAuthUser ,driveAuthSecret ){
+	list.of.packages = c("devtools")	
+	new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+	if(length(new.packages)) install.packages(new.packages,repos="http://cran.rstudio.com/")
+	library(devtools)
 	
+	list.of.packages = c("RGoogleDocs")
+	if(length(new.packages)) {
+		install_github("RGoogleDocs", "duncantl")
+	}
+	library(RGoogleDocs)
+
+	ts = getWorksheets("ClientImagingPackages22", con = getGoogleDocsConnection(getGoogleAuth(driveAuthUser, driveAuthSecret,"wise")))
+	allSheets = names(ts)
+	#then split out GDDs, and find the most recent date available
+	#get the most recent, assuming the formatting is always month-day fro the current year
+	firstSheet = allSheets[1]
+	dat = sheetAsMatrix(ts[[firstSheet]], header = TRUE, as.data.frame = T, trim = TRUE,stringsAsFactors=T)
+	return(dat)	
+}
+
+
 gdd_calculate = function(weather,max_threshold,min_threshold){
 	#assumes input array starts at plant date,
 	dailyGDD = matrix(ncol=1,apply(weather,1,function(temp){
@@ -53,13 +76,20 @@ get_average_weather = function(weather,plantDate){
 
 setwd("~/Desktop/aeolus_scripts/gddGetter")
 
-cornDates = read.csv("Input/corn_imaging_periods.csv",stringsAsFactors=F)
+cornDatesRaw = read.csv("Input/corn_imaging_periods.csv",stringsAsFactors=F)
 
 ENV = fromJSON(file="environment_variables.json")
+driveAuthUser  = ENV[["FROM"]]    
+driveAuthSecret = ENV[["DRIVE"]]     
+
+current_imaging_orders = c()
+current_imaging_orders = grabClientImageOrder(driveAuthUser ,driveAuthSecret )
+	   
+ 
 db = dbConnect(MySQL(), user=ENV[["USER"]],password=ENV[["PASSWD"]],dbname=ENV[["DB"]],host=ENV[["HOST"]])
 
 
-query = paste("SELECT fieldID,name,defaultLatitude,defaultLongitude,planting_date from fields where is_active =1")
+query = paste("SELECT fieldID,name,defaultLatitude,defaultLongitude,planting_date from fields where is_active =1 AND planting_date != 'NULL'")
 rs = dbSendQuery(db, query)
 allFields = fetch(rs, n=-1)
 
@@ -94,6 +124,15 @@ for(eachFieldIndex in 1:nrow(allFields)){
 		print(paste("No crop type for fieldID ",fieldID))
 		next
 	}
+	
+	cornDates = cornDatesRaw
+	
+	if(nrow(current_imaging_orders)){
+			relevantImages = current_imaging_orders[which(current_imaging_orders[,"fieldID"]==fieldID),"packageType"]
+			cornDates = cornDates[which(cornDates[,"Imaging.Event"] %in% relevantImages),]
+			if(nrow(cornDates)<1) next
+	}
+
 	
 	#stop("add here")
 	gdd_profile = gdd_calculate(weather,30,10)
@@ -334,8 +373,9 @@ close(kmlFile)
 
 
 allOut = c()
-for(z in 1:length(stageList)){
+for(z in cornDatesRaw[,"Imaging.Event"]){
 	temp = stageList[[z]][,3:4]
+	if(is.null(temp)) next
 	plantings = c()
 	for(i in 1:nrow(temp)){
 		plantings = c(plantings,fullOutput[which(fullOutput[,2]==temp[i,2]),"plantDat"])
@@ -343,8 +383,7 @@ for(z in 1:length(stageList)){
 		
 	}
 	daysFromPlant = as.Date(stageList[[z]][,6])-as.Date(plantings)
-	temp = cbind(temp,plantings,daysFromPlant,stageList[[z]][,5:6],
-names(stageList)[z])
+	temp = cbind(temp,plantings,daysFromPlant,stageList[[z]][,5:6],z)
   temp = temp[order(as.numeric(temp[,5])),]
 	
 	allOut = rbind(allOut,temp,"")
