@@ -1,4 +1,3 @@
-
 setwd("~/Desktop/aeolus_scripts/gddGetter")
 list.of.packages = c("RMySQL","mailR","maptools","RColorBrewer","sp","rgeos","rjson")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
@@ -18,7 +17,6 @@ removeOldFiles = list.files()
 for(eachFile in removeOldFiles){
 	unlink(eachFile)
 }
-
 
 grabClientImageOrder = function(driveAuthUser ,driveAuthSecret ){
 	list.of.packages = c("devtools")	
@@ -41,7 +39,6 @@ grabClientImageOrder = function(driveAuthUser ,driveAuthSecret ){
 	return(dat)	
 }
 
-
 gdd_calculate = function(weather,max_threshold,min_threshold){
 	#assumes input array starts at plant date,
 	dailyGDD = matrix(ncol=1,apply(weather,1,function(temp){
@@ -54,14 +51,12 @@ gdd_calculate = function(weather,max_threshold,min_threshold){
 	return(output)
 }
 
-
 get_average_weather = function(weather,plantDate){
 	thisYear = format(plantDate,"%Y")
 	saveColNames = colnames(weather)
 	weather[,"date"] = paste(format(as.Date(weather[,"date"]),"%m"),"-",format(as.Date(weather[,"date"]),"%d"),sep="")
 	output = by(weather,weather[,"date"],function(x){
 		return(as.data.frame(matrix(nrow=1,c(x[1,1],x[1,2],paste(thisYear,"-",x[1,3],sep=""),mean(x[,4],na.rm=T),mean(x[,5],na.rm=T),mean(x[,6],na.rm=T))),stringsAsFactors=F))
-	
 	})
 	
 	output = do.call("rbind",output)
@@ -71,7 +66,6 @@ get_average_weather = function(weather,plantDate){
 	output = output[which(as.Date(output[,3])>=plantDate),]
 	colnames(output) = saveColNames
 	return(output)
-	
 }
 
 setwd("~/Desktop/aeolus_scripts/gddGetter")
@@ -87,7 +81,7 @@ current_imaging_orders = grabClientImageOrder(driveAuthUser ,driveAuthSecret )
 	   
 db = dbConnect(MySQL(), user=ENV[["USER"]],password=ENV[["PASSWD"]],dbname=ENV[["DB"]],host=ENV[["HOST"]])
 
-query = paste("SELECT fieldID,name,defaultLatitude,defaultLongitude,planting_date from fields where is_active =1 AND planting_date != 'NULL'")
+query = paste("SELECT fieldID,name,defaultLatitude,defaultLongitude,planting_date from fields where is_active ='1' AND planting_date != 'NULL'")
 rs = dbSendQuery(db, query)
 allFields = fetch(rs, n=-1)
 
@@ -147,11 +141,10 @@ for(eachFieldIndex in 1:nrow(allFields)){
 	#forecast next 5 days by taking the average of last 5 days and extending
 #	totalGDD = gdd_profile[nrow(gdd_profile),"Cumulative"]+(3*)
 	timeLag = as.numeric(Sys.Date()-max(as.Date(weather[,"date"])))
-	totalGDD = gdd_profile[nrow(gdd_profile),"Cumulative"]+(timeLag*gdd_profile[nrow(gdd_profile),"Daily"])
+	totalGDD = gdd_profile[nrow(gdd_profile),"Cumulative"]+(timeLag*mean(gdd_profile[c((nrow(gdd_profile)-min(2,nrow(gdd_profile)-1)):nrow(gdd_profile)),"Daily"],na.rm=T))
 	
 	if(length(which(cornDates[,"GDD.End"]>totalGDD))){
-		
-		
+	
 		query = paste("SELECT * from weatherdata where field_id = '",fieldID,"' AND date >= '",(Sys.Date()-365),"' AND date <='",Sys.Date()-330,"'",sep="")
 		rs = dbSendQuery(db, query)
 		weather = fetch(rs, n=-1)
@@ -181,7 +174,6 @@ for(eachFieldIndex in 1:nrow(allFields)){
 		}
 		
 		#find date ranges for corndat in all of these and days till
-		
 	    GDDtilNextImage = cornDates[which(cornDates[,"GDD.End"]>totalGDD)[1],"GDD.Start"]-totalGDD
 	    daysTilNextImage = which(gdd_forecast_profile[,"Cumulative"]>GDDtilNextImage)[1]
 	     if(length( daysTilNextImage )){
@@ -204,19 +196,16 @@ for(eachFieldIndex in 1:nrow(allFields)){
 	
 	tempOut = c(as.character(Sys.Date()),fieldID,name,lat,lng,plantDat,totalGDD,imagingAdditions)	
 	fullOutput = rbind(fullOutput,tempOut)
-
 }
+
 if(nrow(fullOutput)<1) stop("No data")
 colnames(fullOutput) = c("Estimate Date","fieldID","fieldName","lat","lng","plantDat","Estimated GDD",imageAdditionNames)#"Current Stage","Stage In Next 5 Days","Next Imaging Event Stage","Date of next Image Event","Days till Flight","Lat","Lng","Plant Date")
-
 
 #subset of fullOutput goes to gdd table
 if(F){
 	tempDat = as.data.frame(fullOutput)
 	rownames(tempDat) = tempDat[,"fieldID"]
-	
-	
-	
+
 	pins = SpatialPointsDataFrame(SpatialPoints(cbind(as.numeric(fullOutput[,"Lng"]),as.numeric(fullOutput[,"Lat"]))),data=tempDat)
 	proj4string(pins) = "+proj=longlat +datum=WGS84" 
 	#now to make this into a kml shape file with colored points
@@ -226,7 +215,6 @@ if(F){
 	pinData[,"colorStage In Next 5 Days"] = as.character(pinData[,"colorStage In Next 5 Days"])
 	pinData[,"Current Stage"] = gsub("^$","Not Emerged",pinData[,"Current Stage"])
 	pinData[,"Stage In Next 5 Days"] = gsub("^$","Not Emerged",pinData[,"Stage In Next 5 Days"])
-	
 	
 	library(RColorBrewer)
 	allStages = unique(c(as.character(unique(pinData[,"Current Stage"])),as.character(unique(pinData[,"Stage In Next 5 Days"]))))
@@ -264,7 +252,6 @@ if(F){
 	cat(kmlPolygon()$footer, file=kmlFile, sep="\n")
 	close(kmlFile)
 	
-	
 	#just plot all fields we have in db with pins
 	tf <- paste("Output/AllFieldsPin_",as.character(Sys.Date()),".kml",sep="")
 	kmlFile <- file(tf, "w")
@@ -278,7 +265,6 @@ if(F){
 			cat(addText,file=kmlFile,sep="\n")
 			}
 	
-	
 	cat(kmlPolygon()$footer, file=kmlFile, sep="\n")
 	close(kmlFile)
 	
@@ -286,9 +272,7 @@ if(F){
 	write.csv(pinData[,1:9],csv_outputName,row.names=F)
 	
 	#make these read from external
-	
-	
-			
+		
 	send.mail(from = fromAddr,
 	          to = toAddr,
 	          subject = paste("GDD Update for ",Sys.Date(),sep=""),
@@ -298,12 +282,9 @@ if(F){
 	          attach.files = NULL,#c(stageEstimate_outputName,csv_outputName),
 	          authenticate = TRUE,
 	          send = TRUE)
-	
-
 }
+
 dbDisconnect(db)
-
-
 #have a list with each entry being a crop type/stage
 #cycle through list, create folder with sunlist name
 #determine color scheme for fields in the subfolder, with red being needs imaging soon, green being far away
@@ -316,10 +297,8 @@ cat(kmlPolygon(kmlname="All_Imaging_Periods")$header, file=kmlFile, sep="\n")
 
 for(k in 1:length(stageList)){
 
-	
 	cat(paste("<Folder><name>",names(stageList)[k],"</name>",sep=""),   file=kmlFile, sep="\n")
 	
-
 	tempDat = stageList[[k]]
 	tempDat = tempDat[order(as.numeric(tempDat[,5])),]
 	tempDat = tempDat[is.na(tempDat[,5])==F,]
@@ -342,7 +321,6 @@ for(k in 1:length(stageList)){
 	tempDat = cbind(tempDat,colorsAdd)
 	
 	colnames(tempDat) = c("defaultLatitude","defaultLongitude","name","fieldID","dayTill","Imaging-Date","color")
-
 	#attach colors
 	
  for(i in 1:nrow(tempDat)){
@@ -351,14 +329,12 @@ for(k in 1:length(stageList)){
 		cat(addText,file=kmlFile,sep="\n")
 		}
 	
-		cat("</Folder>",   file=kmlFile, sep="\n")
-		
+		cat("</Folder>",   file=kmlFile, sep="\n")	
 		csvOut = write.csv(tempDat[,c("name","fieldID","dayTill","Imaging-Date")],paste("Output/",names(stageList)[k],"_",Sys.Date(),".csv",sep=""),row.names=F)
 }
 
 cat(kmlPolygon()$footer, file=kmlFile, sep="\n")
 close(kmlFile)
-
 
 allOut = c()
 for(z in cornDatesRaw[,"Imaging.Event"]){
@@ -367,9 +343,8 @@ for(z in cornDatesRaw[,"Imaging.Event"]){
 	plantings = c()
 	for(i in 1:nrow(temp)){
 		plantings = c(plantings,fullOutput[which(fullOutput[,2]==temp[i,2]),"plantDat"])
-		
-		
 	}
+	
 	daysFromPlant = as.Date(stageList[[z]][,6])-as.Date(plantings)
 	temp = cbind(temp,plantings,daysFromPlant,stageList[[z]][,5:6],z)
   temp = temp[order(as.numeric(temp[,5])),]
@@ -377,17 +352,17 @@ for(z in cornDatesRaw[,"Imaging.Event"]){
 	allOut = rbind(allOut,temp,"")
 }
 
-
 colnames(allOut) = c("Field Name","Field ID","Plant Date","Days from Plant to Imaging Period","Days from Current Day until Imaging event","Predicted Date of Imaging Event","Imaging Event Name")
 
 allDatesCSV_Name = paste("Output/allFieldsDates_",Sys.Date(),".csv",sep="")
 write.csv(allOut,allDatesCSV_Name ,row.names=F)
 
-
 emailUser = ENV[["EMAIL_USER"]]
 emailPassword = ENV[["EMAIL_PASSWORD"]]
 fromAddr  = ENV[["FROM"]]
 toAddr = ENV[["TO"]]
+
+print("emailing")
 
 send.mail(from = fromAddr,
           to = toAddr,
@@ -399,7 +374,6 @@ send.mail(from = fromAddr,
           authenticate = TRUE,
           send = TRUE)
           
-
 #upload to google docs
 list.of.packages = c("devtools")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
@@ -412,7 +386,6 @@ if(length(new.packages)) {
 }
 library(RGoogleDocs)
           
-          
 driveAuthUser  = ENV[["FROM"]]    
 driveAuthSecret = ENV[["DRIVE"]]        
  
@@ -422,12 +395,6 @@ driveAuthSecret = ENV[["DRIVE"]]
  tmp <- uploadDoc(allDatesCSV_Name, con, name =  docName, type = "csv",folder=I(docs$GDDs@content["src"]))
           
           
- #now send to google drive
- 
-          
-
-
-
+#now send to google drive
 #make a kml output to just show all fields as well
-
 #map this to csv list of gdd ranges
