@@ -162,7 +162,7 @@ for(eachFieldIndex in 1:nrow(allFields)){
 		for(imagePeriod in 1:nrow(cornDates)){
 			selectFirst = which(gdd_forecast_profile[,2]>cornDates[imagePeriod,1])[1]
 			imageDate = as.Date(weather[selectFirst,3])
-			daysTil = max(0,as.numeric(imageDate-Sys.Date()))
+			daysTil = max(0,as.numeric(imageDate-Sys.Date()))  #just get rid of this max date thing if want to show actual best day
 			imagingAdditions = c(imagingAdditions,cornDates[imagePeriod,3],as.character(imageDate),daysTil)
 			imageAdditionNames = c(	imageAdditionNames,c("Stage",paste(cornDates[imagePeriod,3],"Date"),paste(cornDates[imagePeriod,3],"Days Til") ))
 			

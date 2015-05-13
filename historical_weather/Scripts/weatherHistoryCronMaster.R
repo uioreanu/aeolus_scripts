@@ -65,7 +65,7 @@ if(lockCheck ==0 & freeSpace>10000){ #not another one of these tasks running and
 		  		unlink("lockfileFolder",recursive=T)	
 
 		  	}else{
-		  		errorText = paste("Cron task failed during upload of db: ",Sys.time(),"\n",sep="")
+		  		errorText = paste("Cron task failed during gdd update: ",Sys.time(),"\n",sep="")
 		 		errorSubject = "GDD calculator error"
 				  
 		  		sendEmailError( errorText,errorSubject) 

@@ -4,7 +4,7 @@
 #set each client to 3 images, and 6 for a few exceptions
 #come up with a package type to event name sceme
 
-list.of.packages = c("devtools")
+list.of.packages = c("devtools","rjson","RMySQL")
 
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages,repos="http://cran.rstudio.com/")
@@ -16,8 +16,7 @@ if(length(new.packages)) {
 }
 
 library(RGoogleDocs)
-
-	
+library(rjson)	
 library(RMySQL)
 
 ENV = fromJSON(file="environment_variables.json")
