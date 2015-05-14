@@ -390,7 +390,7 @@ library(RGoogleDocs)
           
 driveAuthUser  = ENV[["FROM"]]    
 driveAuthSecret = ENV[["DRIVE"]]        
- 
+
  con = getGoogleDocsConnection(getGoogleAuth(driveAuthUser , driveAuthSecret ))
  docs = getDocs(con)
  docName = paste("GDDs_",as.character(Sys.Date()),sep="")
