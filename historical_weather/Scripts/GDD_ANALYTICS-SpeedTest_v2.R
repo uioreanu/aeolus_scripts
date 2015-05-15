@@ -14,6 +14,7 @@ library(rgeos)
 homeDir = "~/Desktop/aeolus_scripts/historical_weather"
 setwd(homeDir)
 if(file.exists("weatherCSV")==F) dir.create("weatherCSV")
+source("Scripts/repairLatLng.R")
 
 rawStations = read.csv("station_locationByID.csv",stringsAsFactors=F)
 colnames(rawStations) =c("ID","Lat","Lng","Altitude","State","Name","Something")
@@ -32,6 +33,8 @@ dbPass = ENV[["PASSWD"]]
 dbUsr = ENV[["USER"]]
 dbName =  ENV[["DB"]]
 dbHost = ENV[["HOST"]]
+
+repairLatLng(dbPass,dbUsr,dbName,dbHost )
 
 db = dbConnect(MySQL(), user=dbUsr ,password=dbPass ,dbname=dbName,host=dbHost)
 
@@ -61,8 +64,10 @@ for(eachField in fields[,"fieldID"]){
 	}else{
 		stillNeedIndex = 1:length(allDates)
 	}
+	if(length(stillNeedIndex)){
 	
-	jobList[[length(jobList)+1]] = cbind(eachField,allDates[stillNeedIndex])
+		jobList[[length(jobList)+1]] = cbind(eachField,allDates[stillNeedIndex])
+	}
 }
 dbDisconnect(db)
 
