@@ -3,6 +3,7 @@ runGDD = function(currentDate){
 	
 	
 	setwd("~/Desktop/aeolus_scripts/gddGetter")
+	unlink("ImagingPackagesLookup/*")
 	source('Scripts/createImagingPackage.R')
 	source('Scripts/parseCloudCoverXML.R')
 	
