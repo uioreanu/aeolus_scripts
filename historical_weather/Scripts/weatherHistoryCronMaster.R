@@ -33,6 +33,8 @@ cat(paste("check value of folder: ",lockCheck,"\n",sep=""),file=paste(homeDir,"/
 response = system("df -k",intern=T)
 freeSpace = as.numeric(strsplit(response[2]," +")[[1]][4])
 
+startProcessingDate = Sys.Date()
+
 if(lockCheck ==0 & freeSpace>10000){ #not another one of these tasks running and have 20gb free  #probably make custom limit for each type of cron script
 	#run the actual script
 	#and actually, check for at least 20gb of disk space here as well
@@ -57,7 +59,8 @@ if(lockCheck ==0 & freeSpace>10000){ #not another one of these tasks running and
 		  unlink("lockfileFolder",recursive=T)	
 
 		  if(T){
-		  	calculateAndEmailGDDProgress = tryCatch(source("../gddGetter/Scripts/gdd_getter.R"),error=function(e) e)
+		  	source("../gddGetter/Scripts/gdd_getter.R")
+		  	calculateAndEmailGDDProgress = tryCatch(runGDD(startProcessingDate),error=function(e) e)
 		  	setwd(homeDir)
 
 		  	if(inherits(calculateAndEmailGDDProgress,"error")==F){

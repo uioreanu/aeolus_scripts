@@ -16,7 +16,6 @@ dbHost = ENV[["HOST"]]
 
 db = dbConnect(MySQL(), user=dbUsr ,password=dbPass ,dbname=dbName,host=dbHost)
 
-
 #so pass each field center lat lng here in here:, and produce that using gCentroid on the entire fieldBlockGeometry
 dat = fromJSON(file="http://forecast.weather.gov/MapClick.php?lat=38.4247341&lon=-86.9624086&FcstType=json")
 
@@ -38,7 +37,6 @@ if(file.exists(searchTable )==F){
 	 tableNodes = getNodeSet(doc, "//table")
 	 tb = readHTMLTable(doc=tableNodes[[4]],header=T) 
 	 write.csv(tb,paste("Output/",stationID,".csv",sep=""),row.names=F)
-
  }else{
  	tb = read.csv(searchTable ,stringsAsFactors=F)
  }
@@ -69,9 +67,7 @@ outputTable[,1] = dateTime
 #outputTable should go to a db after checking and removing duplicates based on station id an d
 #need a more sophisticated way of getting exact date of prediction,
 #them, check database for existing prediction for that date/station, and only update the ones that don't match
-
- #get current day of month, look for the first occurence of that along with a time before cront ask started (4am)
-
+#get current day of month, look for the first occurence of that along with a time before cront ask started (4am)
 #ehh just find the first occurence of 4am, and then go down the next occurence of 4 am, and figure out the date of the first
 #this bit may not be necessary
 

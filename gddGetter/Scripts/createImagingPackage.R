@@ -35,6 +35,15 @@ allPackages[["6-Image"]] =  c("First Vegetative","Second Vegetative","Third Vege
 allPackages[["3-Image"]] =  c("First Vegetative","Third Vegetative","Fifth Vegetative")
 allPackages[["Stand-Count-Special"]] = c("Stand Count","Third Vegetative","Fifth Vegetative")
 
+con = getGoogleDocsConnection(getGoogleAuth(driveAuthUser, driveAuthSecret ))
+docs = getDocs(con)
+
+trickShit = getWorksheets("Trick Shit (Field Exception Imaging Package)", con = getGoogleDocsConnection(getGoogleAuth(driveAuthUser, driveAuthSecret ,"wise")))
+allSheets = names(trickShit )
+#then split out GDDs, and find the most recent date available
+#get the most recent, assuming the formatting is always month-day fro the current year
+firstSheet = allSheets[1]
+trickShit = sheetAsMatrix(trickShit [[firstSheet]], header = TRUE, as.data.frame = T, trim = TRUE,stringsAsFactors=F)
 
 allImagingRuns = c()
 for(eachClient in 1:nrow(data)){
@@ -47,16 +56,25 @@ for(eachClient in 1:nrow(data)){
 	if(data[eachClient,2] %in% c(74:89)) packageType = allPackages[["Stand-Count-Special"]]
 	if(nrow(fields)<1) next
 	for(k in 1:nrow(fields)){
-		allImagingRuns  = rbind(allImagingRuns,cbind(fields[k,],packageType))
+		thisPackageType = packageType
+		if(fields[k,"fieldID"] %in% trickShit[,"fieldID"]){
+			thisPackageType = allPackages[["6-Image"]]
+		}
+		allImagingRuns  = rbind(allImagingRuns,cbind(fields[k,],thisPackageType))
 	}
-	
 }
-
+colnames(allImagingRuns) = c("fieldID","name","packageType")
+#review trick shit table here and update based on that
 writeName = paste("ImagingPackagesLookup/ClientPackagesSaveForUpload_",as.numeric(Sys.time()),".csv",sep="")
 write.csv(allImagingRuns,writeName,row.names=F)
 
 con = getGoogleDocsConnection(getGoogleAuth(driveAuthUser, driveAuthSecret ))
 docs = getDocs(con)
+
+trickShit = getWorksheets("Trick Shit (Field Exception Imaging Package)", con = getGoogleDocsConnection(getGoogleAuth(driveAuthUser, driveAuthSecret ,"wise")))
+#loopthrough trickShit and replace 3 image package with a 6imagePackage..
+
+
 outputName = "ClientImagingPackages22"
 if(is.null(docs[[outputName]])==F){
 	
