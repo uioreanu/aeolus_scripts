@@ -127,6 +127,7 @@ runGDD = function(currentDate){
 		}
 		if(all(allDistances)) break
 		numCentersStart = numCentersStart+2
+		numCentersStart = min(numCentersStart,nrow(fieldCenters))
 	}
 	
 	#plot(kMeanResult$centers,xlim=c(-100,-85),ylim=c(38,47),col="red")
@@ -150,18 +151,26 @@ runGDD = function(currentDate){
 	
 
 	weatherNodeMapping=weatherNodeMapping[order(weatherNodeMapping[,2]),]
-	allFields[order(allFields)]
+	#allFields[order(allFields),]
 	allFields$fieldID = factor(allFields$fieldID, levels = weatherNodeMapping[,1])
 
 	allFields = allFields[order(allFields$fieldID),]
+	allFields[,"fieldID"] = as.numeric(as.character(allFields[,"fieldID"]))
 	
-	lastNode =c()
+	lastNode =-99
 	for(eachFieldIndex in 1:nrow(allFields)){
-		thisNode = weatherNodeMapping[eachFieldsIndex,2]
+		thisNode = weatherNodeMapping[eachFieldIndex,2]
 		limitedForecast = F
 		
-		if(thisNode != lastNode){
-			weatherForecastScrape = getCloudForecast(db,allFields,eachFieldIndex,currentDate,limitedForecast,weatherNodeMapping)
+		if(thisNode != lastNode | is.null(weatherForecastScrape)){
+			weatherForecastScrape = tryCatch(getCloudForecast(db,allFields,eachFieldIndex,currentDate,limitedForecast,weatherNodeMapping),error = function(e) e)
+			if(inherits(weatherForecastScrape,"error")){
+				weatherForecastScrape =  tryCatch(getCloudForecast(db,allFields,eachFieldIndex,currentDate,limitedForecast),error = function(e) e)
+					if(inherits(weatherForecastScrape,"error")){
+						weatherForecastScrape = NULL
+					}
+			}
+			
 		}
 		lastNode = thisNode
 		
@@ -176,7 +185,7 @@ runGDD = function(currentDate){
 		query = paste("SELECT * from weatherdata where field_id = '",fieldID,"' AND date >= '",as.Date(plantDat),"'",sep="")
 		rs = dbSendQuery(db, query)
 		weather = fetch(rs, n=-1)
-		
+		thisWeather = weather
 		if(nrow(weather)<1) {
 			print(paste("No weather date for fieldID ",fieldID))
 			next
@@ -238,15 +247,23 @@ runGDD = function(currentDate){
 			weather = weather[which(weather[,3]>=as.Date(plantDat)),]
 			#limitedForecast = F
 			#weatherForecastScrape = getCloudForecast(db,allFields,eachFieldIndex,currentDate,limitedForecast)
-			temps = weatherForecastScrape [["minMaxPredict"]]
-			for(k in 1:nrow(temps)){
-				weather[which(weather[,"date"]==temps[k,"date"]),c("t_max","t_min")] = c(as.numeric(as.character(temps[k,"t_max"])),as.numeric(as.character(temps[k,"t_min"])))
+			if(is.null(weatherForecastScrape)==F){
+				temps = weatherForecastScrape [["minMaxPredict"]]
+				for(k in 1:nrow(temps)){
+					weather[which(weather[,"date"]==temps[k,"date"]),c("t_max","t_min")] = c(as.numeric(as.character(temps[k,"t_max"])),as.numeric(as.character(temps[k,"t_min"])))
+				}
 			}
+			
+			for(k in 1:nrow(thisWeather)){
+				weather[which(weather[,"date"]==thisWeather[k,"date"]),c("t_max","t_min")] = c(as.numeric(as.character(thisWeather[k,"t_max"])),as.numeric(as.character(thisWeather[k,"t_min"])))
+			}
+			
+		
 			
 			
 			gdd_forecast_profile = gdd_calculate(weather,30,10)#+totalGDD
-			gdd_forecast_profile[1:nrow(gdd_profile),] = gdd_profile
-			gdd_forecast_profile[,2] = cumsum(gdd_forecast_profile[,1]) 
+			#gdd_forecast_profile[1:nrow(gdd_profile),] = gdd_profile
+			#gdd_forecast_profile[,2] = cumsum(gdd_forecast_profile[,1]) 
 			colnames(gdd_forecast_profile) = colnames(gdd_profile)
 			
 			#gdd_forecast_profile[c((nrow(gdd_profile)+1):nrow(gdd_forecast_profile)),1] = gdd_forecast_profile[c((nrow(gdd_profile)+1):nrow(gdd_forecast_profile)),2]+gdd_profile[nrow(gdd_profile),2]
@@ -469,7 +486,10 @@ runGDD = function(currentDate){
 	}
 	
 	for(chooseRow in 1:nrow(allOut)){
-		cloudForecast = getCloudForecast(db,allOut,chooseRow,currentDate,T)
+		cloudForecast = tryCatch(getCloudForecast(db,allOut,chooseRow,currentDate,T)[["clouds"]],error = function(e) e)
+		if(inherits(cloudForecast,"error")){
+			cloudForecast = rep("",times=15)
+		}
 		addendums = rbind(addendums,cloudForecast)	
 	}
 	colnames(addendums) =newColNames

@@ -17,7 +17,10 @@ getCloudForecast = function(db,allOut,chooseRow,currentDate,limitedForecast,weat
 		next
 	}
 	if(is.null(weatherNodeMapping)==F){
-		latLngs = weatherNodeMapping[chooseRow,]
+		latLngs = matrix(nrow=1,weatherNodeMapping[chooseRow,])
+		colnames(latLngs) = colnames(weatherNodeMapping)
+		latLngs[1,1] = as.integer(latLngs[1,1])
+
 	}else{
 		query = paste("Select defaultLongitude,defaultLatitude from fields where fieldID ='",allOut[chooseRow,"fieldID"],"'",sep="")
 		rs = dbSendQuery(db, query)
@@ -26,7 +29,7 @@ getCloudForecast = function(db,allOut,chooseRow,currentDate,limitedForecast,weat
 	
 	#find the date for the given field somehow, prb put this in gddGetter
 	#for each field ID, find the defaultLng/defaultLat, use that to query this webpage
-	doc = htmlParse(readLines(paste("http://forecast.weather.gov/MapClick.php?lat=",latLngs[1,"defaultLatitude",],"&lon=",latLngs[1,"defaultLongitude"],"&FcstType=digitalDWML",sep="")))
+	doc = htmlParse(readLines(paste("http://forecast.weather.gov/MapClick.php?lat=",round(latLngs[1,"defaultLatitude"],5),"&lon=",round(latLngs[1,"defaultLongitude"],5),"&FcstType=digitalDWML",sep="")))
 	tableNodes = getNodeSet(doc, "//time-layout //start-valid-time")
 	dates = unlist(lapply(tableNodes,function(x) strftime(xmlValue(x))))
 	times = unlist(lapply(tableNodes,function(x) strsplit(as.character(strptime(strsplit(as.character(xmlValue(x)),"T")[[1]][2],format="%H:%M:%S"))," ")[[1]][2]))
