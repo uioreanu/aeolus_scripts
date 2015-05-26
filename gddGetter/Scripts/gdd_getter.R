@@ -158,6 +158,8 @@ runGDD = function(currentDate){
 	allFields[,"fieldID"] = as.numeric(as.character(allFields[,"fieldID"]))
 	
 	lastNode =-99
+	weatherForecastScrape = NULL
+
 	for(eachFieldIndex in 1:nrow(allFields)){
 		thisNode = weatherNodeMapping[eachFieldIndex,2]
 		limitedForecast = F
