@@ -90,7 +90,7 @@ runGDD = function(currentDate){
 		   
 	db = dbConnect(MySQL(), user=ENV[["USER"]],password=ENV[["PASSWD"]],dbname=ENV[["DB"]],host=ENV[["HOST"]])
 	
-	query = paste("SELECT fieldID,name,defaultLatitude,defaultLongitude,planting_date from fields where is_active ='1' AND planting_date != 'NULL'")
+	query = paste("SELECT fieldID,name,defaultLatitude,defaultLongitude,planting_date from fields where defaultLatitude != 'NULL' AND is_active ='1' AND planting_date != 'NULL'")
 	rs = dbSendQuery(db, query)
 	allFields = fetch(rs, n=-1)
 	
