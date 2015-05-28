@@ -32,7 +32,7 @@ data= fetch(rs, n=-1)
 
 allPackages = list()
 allPackages[["6-Image"]] =  c("First Vegetative","Second Vegetative","Third Vegetative","Fourth Vegetative","Fifth Vegetative","Sixth Vegetative")
-allPackages[["3-Image"]] =  c("First Vegetative","Third Vegetative","Fifth Vegetative")
+allPackages[["3-Image"]] =  c("Second Vegetative","Fourth Vegetative","Sixth Vegetative")
 allPackages[["Stand-Count-Special"]] = c("Stand Count","Third Vegetative","Fifth Vegetative")
 
 con = getGoogleDocsConnection(getGoogleAuth(driveAuthUser, driveAuthSecret ))
