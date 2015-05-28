@@ -37,7 +37,7 @@ dbHost = ENV[["HOST"]]
 repairLatLng(dbPass,dbUsr,dbName,dbHost )
 
 db = dbConnect(MySQL(), user=dbUsr ,password=dbPass ,dbname=dbName,host=dbHost)
-
+#restrict these to premium users with planting dates
 query = paste("SELECT fieldID FROM fields where fieldBlockGeometry != ''")
 rs = dbSendQuery(db, query)
 fields = fetch(rs, n=-1)

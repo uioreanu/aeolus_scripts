@@ -5,23 +5,26 @@
 #come up with a package type to event name sceme
 
 list.of.packages = c("devtools","rjson","RMySQL")
-
-new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
-if(length(new.packages)) install.packages(new.packages,repos="http://cran.rstudio.com/")
-library(devtools)
-
-list.of.packages = c("RGoogleDocs")
-if(length(new.packages)) {
-	install_github("RGoogleDocs", "duncantl")
+if(F){
+	new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+	if(length(new.packages)) install.packages(new.packages,repos="http://cran.rstudio.com/")
+	library(devtools)
+	
+	list.of.packages = c("RGoogleDocs")
+	if(length(new.packages)) {
+		install_github("RGoogleDocs", "duncantl")
+	}
+	
+	library(RGoogleDocs)
 }
-
-library(RGoogleDocs)
 library(rjson)	
 library(RMySQL)
 
 ENV = fromJSON(file="environment_variables.json")
 driveAuthUser  = ENV[["FROM"]]    
 driveAuthSecret = ENV[["DRIVE"]]     
+trickShitLocation = ENV[["TRICK_SHIT"]]
+clientOrderLocation = ENV[["CLIENT_ORDER"]]
 
 db = dbConnect(MySQL(), user=ENV[["USER"]],password=ENV[["PASSWD"]],dbname=ENV[["DB"]],host=ENV[["HOST"]])
 
@@ -30,20 +33,30 @@ rs = dbSendQuery(db, query)
 data= fetch(rs, n=-1)
 
 
+
 allPackages = list()
 allPackages[["6-Image"]] =  c("First Vegetative","Second Vegetative","Third Vegetative","Fourth Vegetative","Fifth Vegetative","Sixth Vegetative")
 allPackages[["3-Image"]] =  c("Second Vegetative","Fourth Vegetative","Sixth Vegetative")
 allPackages[["Stand-Count-Special"]] = c("Stand Count","Third Vegetative","Fifth Vegetative")
+if(F){
+	con = getGoogleDocsConnection(getGoogleAuth(driveAuthUser, driveAuthSecret ))
+	docs = getDocs(con)
+	
+	trickShit = getWorksheets("Trick Shit (Field Exception Imaging Package)", con = getGoogleDocsConnection(getGoogleAuth(driveAuthUser, driveAuthSecret ,"wise")))
+	allSheets = names(trickShit )
+	#then split out GDDs, and find the most recent date available
+	#get the most recent, assuming the formatting is always month-day fro the current year
+	firstSheet = allSheets[1]
+	trickShit = sheetAsMatrix(trickShit [[firstSheet]], header = TRUE, as.data.frame = T, trim = TRUE,stringsAsFactors=F)
+	
+}
+#save trick shit in s3 and call from there instead of google docs,
+#then save this back to s3 when complete
 
-con = getGoogleDocsConnection(getGoogleAuth(driveAuthUser, driveAuthSecret ))
-docs = getDocs(con)
+#try something like when reading from tilestore
 
-trickShit = getWorksheets("Trick Shit (Field Exception Imaging Package)", con = getGoogleDocsConnection(getGoogleAuth(driveAuthUser, driveAuthSecret ,"wise")))
-allSheets = names(trickShit )
-#then split out GDDs, and find the most recent date available
-#get the most recent, assuming the formatting is always month-day fro the current year
-firstSheet = allSheets[1]
-trickShit = sheetAsMatrix(trickShit [[firstSheet]], header = TRUE, as.data.frame = T, trim = TRUE,stringsAsFactors=F)
+
+trickShit = read.csv(text = getURL(trickShitLocation ))
 
 allImagingRuns = c()
 for(eachClient in 1:nrow(data)){
@@ -68,30 +81,41 @@ colnames(allImagingRuns) = c("fieldID","name","packageType")
 writeName = paste("ImagingPackagesLookup/ClientPackagesSaveForUpload_",as.numeric(Sys.time()),".csv",sep="")
 write.csv(allImagingRuns,writeName,row.names=F)
 
-con = getGoogleDocsConnection(getGoogleAuth(driveAuthUser, driveAuthSecret ))
-docs = getDocs(con)
-
-trickShit = getWorksheets("Trick Shit (Field Exception Imaging Package)", con = getGoogleDocsConnection(getGoogleAuth(driveAuthUser, driveAuthSecret ,"wise")))
-#loopthrough trickShit and replace 3 image package with a 6imagePackage..
 
 
-outputName = "ClientImagingPackages22"
-if(is.null(docs[[outputName]])==F){
+
+#command = "s3cmd ls s3://tilestore.mavrx.co/flightSupportData/ClientImageOrders/*"
+#existingOrders = system(command,intern=T)  #this will be in actual database soon
+
+command = paste("s3cmd put '",writeName,"' 's3://",clientOrderLocation ,"'",sep="")
+system(command)
+
+if(F){
+	con = getGoogleDocsConnection(getGoogleAuth(driveAuthUser, driveAuthSecret ))
+	docs = getDocs(con)
 	
-	#then download a copy and delete, then upload new one
-	ts = getWorksheets(outputName, con = getGoogleDocsConnection(getGoogleAuth(driveAuthUser, driveAuthSecret ,"wise")))
-	allSheets = names(ts)
-	#then split out GDDs, and find the most recent date available
-	#get the most recent, assuming the formatting is always month-day fro the current year
-	firstSheet = allSheets[1]
-	dat = sheetAsMatrix(ts[[firstSheet]], header = TRUE, as.data.frame = T, trim = TRUE,stringsAsFactors=F)
-	write.csv(dat,paste("ImagingPackagesLookup/ClientPackagesSaveDownload_",as.numeric(Sys.time()),".csv",sep=""),row.names=F)
-	removed = deleteDoc(outputName,con)
+	trickShit = getWorksheets("Trick Shit (Field Exception Imaging Package)", con = getGoogleDocsConnection(getGoogleAuth(driveAuthUser, driveAuthSecret ,"wise")))
+	#loopthrough trickShit and replace 3 image package with a 6imagePackage..
+	
+	
+	outputName = "ClientImagingPackages22"
+	if(is.null(docs[[outputName]])==F){
+		
+		#then download a copy and delete, then upload new one
+		ts = getWorksheets(outputName, con = getGoogleDocsConnection(getGoogleAuth(driveAuthUser, driveAuthSecret ,"wise")))
+		allSheets = names(ts)
+		#then split out GDDs, and find the most recent date available
+		#get the most recent, assuming the formatting is always month-day fro the current year
+		firstSheet = allSheets[1]
+		dat = sheetAsMatrix(ts[[firstSheet]], header = TRUE, as.data.frame = T, trim = TRUE,stringsAsFactors=F)
+		write.csv(dat,paste("ImagingPackagesLookup/ClientPackagesSaveDownload_",as.numeric(Sys.time()),".csv",sep=""),row.names=F)
+		removed = deleteDoc(outputName,con)
+	}
+	
+	tmp <- uploadDoc(writeName , con, name = outputName, type = "csv",folder=I(docs[["Client Imaging Order Tracking"]]@content["src"]))
+	dbDisconnect(db)
+
 }
-
-tmp <- uploadDoc(writeName , con, name = outputName, type = "csv",folder=I(docs[["Client Imaging Order Tracking"]]@content["src"]))
-dbDisconnect(db)
-
 #save this to a unique 
 #so the gdd getter will reference ClientImagingPackages22 when writing out the GDD, and the pilot managment airport_field_gdd script will do that as well just in case
 

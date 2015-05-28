@@ -19,6 +19,7 @@ runGDD = function(currentDate){
 	library(rgeos)
 	library(rjson)
 	library(XML)
+	library(RCurl)
 	
 	setwd("~/Desktop/aeolus_scripts/gddGetter/Output")
 	
@@ -27,7 +28,8 @@ runGDD = function(currentDate){
 		unlink(eachFile)
 	}
 	
-	grabClientImageOrder = function(driveAuthUser ,driveAuthSecret ){
+	grabClientImageOrder = function(driveAuthUser ,driveAuthSecret,ENV){
+		if(F){
 		list.of.packages = c("devtools")	
 		new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 		if(length(new.packages)) install.packages(new.packages,repos="http://cran.rstudio.com/")
@@ -45,6 +47,9 @@ runGDD = function(currentDate){
 		#get the most recent, assuming the formatting is always month-day fro the current year
 		firstSheet = allSheets[1]
 		dat = sheetAsMatrix(ts[[firstSheet]], header = TRUE, as.data.frame = T, trim = TRUE,stringsAsFactors=T)
+		}
+		dat = read.csv(text = getURL( ENV[["CLIENT_ORDER"]]))
+
 		return(dat)	
 	}
 	
@@ -84,13 +89,14 @@ runGDD = function(currentDate){
 	ENV = fromJSON(file="environment_variables.json")
 	driveAuthUser  = ENV[["FROM"]]    
 	driveAuthSecret = ENV[["DRIVE"]]     
+	GDDSaveLocation = ENV[["GDD_LOCATION"]]
 	
 	current_imaging_orders = c()
-	current_imaging_orders = grabClientImageOrder(driveAuthUser ,driveAuthSecret )
+	current_imaging_orders = grabClientImageOrder(driveAuthUser ,driveAuthSecret,ENV)
 		   
 	db = dbConnect(MySQL(), user=ENV[["USER"]],password=ENV[["PASSWD"]],dbname=ENV[["DB"]],host=ENV[["HOST"]])
 	
-	query = paste("SELECT fieldID,name,defaultLatitude,defaultLongitude,planting_date from fields where defaultLatitude != 'NULL' AND is_active ='1' AND planting_date != 'NULL'")
+	query = paste("SELECT clients.clientID,fields.fieldID,fields.name,fields.defaultLatitude,fields.defaultLongitude,fields.planting_date from fields INNER JOIN clients ON clients.clientID = fields.clientID INNER JOIN auth_users ON auth_users.id = clients.owner_id where fields.defaultLatitude != 'NULL' AND fields.is_active ='1' AND fields.planting_date != 'NULL' AND auth_users.premium = '1'")
 	rs = dbSendQuery(db, query)
 	allFields = fetch(rs, n=-1)
 	
@@ -98,7 +104,7 @@ runGDD = function(currentDate){
 	stageList = c()
 	
 	getDistances = function(source,targets,threshold){
-		temp=((source[1]-targets[,1])^2+(source[2]-targets[,2])^2)^.5
+		temp=(((source[1]-targets[,1])^2+(source[2]-targets[,2])^2)^.5)
 		if(any(temp>threshold)){
 			return(F)
 		}else{
@@ -114,21 +120,48 @@ runGDD = function(currentDate){
 	#fieldCenters = fieldCenters[duplicated(fieldCenters)==F,]
 	rownames(fieldCenters) = 1:nrow(fieldCenters)
 	numCentersStart = floor(nrow(fieldCenters)/10)
+	if(F){
+	xy = SpatialPointsDataFrame(fieldCenterObject,as.data.frame(matrix(ncol=1,c(1:length(fieldCenterObject)))))
+	chc <- hclust(dist(data.frame(rownames=rownames(xy@data), x=coordinates(xy)[,1],
+              y=coordinates(xy)[,2])), method="complete")
+
+# Distance with a 40m threshold  
+d = 1
+chc.d40 <- cutree(chc, h=d) 
+xy@data <- data.frame(xy@data, Clust=chc.d40)
+}
+
+
 	
-	
-	while(T){
+	fieldCenterObject = SpatialPoints(fieldCenters,CRS("+proj=longlat +datum=WGS84"))
+	#while(T){
 		kMeanResult = kmeans(fieldCenters,numCentersStart)
 		kMeanCenters = kMeanResult$centers
 		rownames(kMeanCenters) = c(1:nrow(kMeanCenters))
 		allDistances = c()
+		
+		#so here, take the centers, buffer them, see if any fields are intersected by a .7 buffer
+		kMeanCentersCompare = gBuffer(SpatialPoints(kMeanCenters ,CRS("+proj=longlat +datum=WGS84")),width=.7,byid=T)
+		needACenter = which(apply(gIntersects(kMeanCentersCompare,fieldCenterObject,byid=T ),1,function(x) any(x))==F)
+		if(length(needACenter)){
+			kMeanCenters = rbind(kMeanCenters,fieldCenters[needACenter,])
+		}
+		
+	#	if(all(apply(gIntersects(kMeanCentersCompare,fieldCenterObject,byid=T ),1,function(x) any(x))))#{
+			#break
+		#}
+			
+	if(F){
 		for(i in 1:nrow(kMeanCenters)){
-				returnVal = getDistances(kMeanCenters[i,],fieldCenters[as.numeric(names(kMeanResult$cluster[which(kMeanResult$cluster==i)])),],.7)
+				returnVal = getDistances(kMeanCenters[i,],fieldCenters[as.numeric(names(kMeanResult$cluster[which(kMeanResult$cluster==i)])),],2)
+				#if(returnVal==F) stop("look here")
 				allDistances = c(allDistances,returnVal)
 		}
 		if(all(allDistances)) break
-		numCentersStart = numCentersStart+2
-		numCentersStart = min(numCentersStart,nrow(fieldCenters))
-	}
+		}
+		#numCentersStart = numCentersStart+2
+		#numCentersStart = min(numCentersStart,nrow(fieldCenters))
+	#}
 	
 	#plot(kMeanResult$centers,xlim=c(-100,-85),ylim=c(38,47),col="red")
 	#par(new=T)
@@ -139,11 +172,20 @@ runGDD = function(currentDate){
 	#	weatherNodeList[[k]] = list("centers"=kMeanResult$centers[k,],"fieldIDs"=allFieldsIds[as.numeric(names(kMeanResult$cluster[which(kMeanResult$cluster==k)]))]		
 	#}
 	
+	resultClusterMapping = c()
+	for(i in 1:nrow(fieldCenters)){
+		nearestNode = which.min(((fieldCenters[i,1]-kMeanCenters[,1])^2+(fieldCenters[i,2]-kMeanCenters[,2])^2)^.5)
+		resultClusterMapping = c(resultClusterMapping,nearestNode)
+	}
+	#need to edit kMeanResultCluster, by just finding nearest node point to each field and assigning
+	
+	#for each field center, find nearest node center
 	weatherNodeMapping=matrix(ncol=4,nrow=length(allFieldsIds))
 	weatherNodeMapping[,1]=allFieldsIds
-	weatherNodeMapping[,2] = as.numeric(as.character(kMeanResult$cluster))
+	weatherNodeMapping[,2] = resultClusterMapping   #as.numeric(as.character(kMeanResult$cluster))
 	for(z in 1:nrow(weatherNodeMapping)){
-		weatherNodeMapping[z,3:4] = kMeanCenters[weatherNodeMapping[z,2],]
+		weatherNodeMapping[z,3] = kMeanCenters[weatherNodeMapping[z,2],1]
+		weatherNodeMapping[z,4] = kMeanCenters[weatherNodeMapping[z,2],2]
 	}
 	colnames(weatherNodeMapping) = c("fieldID","weatherNodeID","defaultLongitude","defaultLatitude")
 	#dont really want to store all these
@@ -520,25 +562,38 @@ runGDD = function(currentDate){
 	#upload to google docs
 	#add target date cloud prediction there
 	
-	list.of.packages = c("devtools")
-	new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
-	if(length(new.packages)) install.packages(new.packages,repos="http://cran.rstudio.com/")
-	library(devtools)
-	
-	list.of.packages = c("RGoogleDocs")
-	if(length(new.packages)) {
-		install_github("RGoogleDocs", "duncantl")
+	#upload to s3 and email to alexey instead of this google uploader
+	mostRecentGDDCSV = tryCatch(read.csv(text = getURL(paste("s3://",GDDSaveLocation,"latestGDD.csv") )),error = function(e) e)
+	if(inherits(mostRecentGDDCSV,"error")==F){
+		saveOldGDDName = paste("Pre-",currentDate,"_GDD.csv",sep="")
+		write.csv(mostRecentGDDCSV,saveOldGDDName,row.names=F)
+		command = paste("s3cmd put '",saveName,"' 's3://",GDDSaveLocation,saveName,"'",sep="")
+		system(command)
 	}
-	library(RGoogleDocs)
-	          
-	driveAuthUser  = ENV[["FROM"]]    
-	driveAuthSecret = ENV[["DRIVE"]]        
-	
-	 con = getGoogleDocsConnection(getGoogleAuth(driveAuthUser , driveAuthSecret ))
-	 docs = getDocs(con)
-	 docName = paste("GDDs_",as.character(currentDate),sep="")
-	 tmp <- uploadDoc(allDatesCSV_Name, con, name =  docName, type = "csv",folder=I(docs$GDDs@content["src"]))
-	          
+	command = paste("s3cmd put '",allDatesCSV_Name,"' 's3://",GDDSaveLocation ,"latestGDD.csv","'",sep="")
+	system(command)
+    
+    if(F){  
+		#download the current, create a dated name for it, write to csv, re-upload, then save current
+		list.of.packages = c("devtools")
+		new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+		if(length(new.packages)) install.packages(new.packages,repos="http://cran.rstudio.com/")
+		library(devtools)
+		
+		list.of.packages = c("RGoogleDocs")
+		if(length(new.packages)) {
+			install_github("RGoogleDocs", "duncantl")
+		}
+		library(RGoogleDocs)
+		          
+		driveAuthUser  = ENV[["FROM"]]    
+		driveAuthSecret = ENV[["DRIVE"]]        
+		
+		 con = getGoogleDocsConnection(getGoogleAuth(driveAuthUser , driveAuthSecret ))
+		 docs = getDocs(con)
+		 docName = paste("GDDs_",as.character(currentDate),sep="")
+		 tmp <- uploadDoc(allDatesCSV_Name, con, name =  docName, type = "csv",folder=I(docs$GDDs@content["src"]))
+	 }         
  }         
 #now send to google drive
 #make a kml output to just show all fields as well
