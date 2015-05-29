@@ -30,23 +30,23 @@ runGDD = function(currentDate){
 	
 	grabClientImageOrder = function(driveAuthUser ,driveAuthSecret,ENV){
 		if(F){
-		list.of.packages = c("devtools")	
-		new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
-		if(length(new.packages)) install.packages(new.packages,repos="http://cran.rstudio.com/")
-		library(devtools)
+			list.of.packages = c("devtools")	
+			new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+			if(length(new.packages)) install.packages(new.packages,repos="http://cran.rstudio.com/")
+			library(devtools)
+			
+			list.of.packages = c("RGoogleDocs")
+			if(length(new.packages)) {
+				install_github("RGoogleDocs", "duncantl")
+			}
+			library(RGoogleDocs)
 		
-		list.of.packages = c("RGoogleDocs")
-		if(length(new.packages)) {
-			install_github("RGoogleDocs", "duncantl")
-		}
-		library(RGoogleDocs)
-	
-		ts = getWorksheets("ClientImagingPackages22", con = getGoogleDocsConnection(getGoogleAuth(driveAuthUser, driveAuthSecret,"wise")))
-		allSheets = names(ts)
-		#then split out GDDs, and find the most recent date available
-		#get the most recent, assuming the formatting is always month-day fro the current year
-		firstSheet = allSheets[1]
-		dat = sheetAsMatrix(ts[[firstSheet]], header = TRUE, as.data.frame = T, trim = TRUE,stringsAsFactors=T)
+			ts = getWorksheets("ClientImagingPackages22", con = getGoogleDocsConnection(getGoogleAuth(driveAuthUser, driveAuthSecret,"wise")))
+			allSheets = names(ts)
+			#then split out GDDs, and find the most recent date available
+			#get the most recent, assuming the formatting is always month-day fro the current year
+			firstSheet = allSheets[1]
+			dat = sheetAsMatrix(ts[[firstSheet]], header = TRUE, as.data.frame = T, trim = TRUE,stringsAsFactors=T)
 		}
 		dat = read.csv(text = getURL( ENV[["CLIENT_ORDER"]]))
 
@@ -96,7 +96,7 @@ runGDD = function(currentDate){
 		   
 	db = dbConnect(MySQL(), user=ENV[["USER"]],password=ENV[["PASSWD"]],dbname=ENV[["DB"]],host=ENV[["HOST"]])
 	
-	query = paste("SELECT clients.clientID,fields.fieldID,fields.name,fields.defaultLatitude,fields.defaultLongitude,fields.planting_date from fields INNER JOIN clients ON clients.clientID = fields.clientID INNER JOIN auth_users ON auth_users.id = clients.owner_id where fields.defaultLatitude != 'NULL' AND fields.is_active ='1' AND fields.planting_date != 'NULL' AND auth_users.premium = '1'")
+	query = paste("SELECT clients.clientID,fields.fieldID,fields.name,fields.defaultLatitude,fields.defaultLongitude,fields.planting_date from fields INNER JOIN clients ON clients.clientID = fields.clientID INNER JOIN auth_users ON auth_users.id = clients.owner_id where fields.defaultLatitude != 'NULL' AND fields.is_active ='1' AND fields.planting_date != 'NULL'")# AND auth_users.premium = '1'")
 	rs = dbSendQuery(db, query)
 	allFields = fetch(rs, n=-1)
 	
@@ -120,17 +120,6 @@ runGDD = function(currentDate){
 	#fieldCenters = fieldCenters[duplicated(fieldCenters)==F,]
 	rownames(fieldCenters) = 1:nrow(fieldCenters)
 	numCentersStart = floor(nrow(fieldCenters)/10)
-	if(F){
-	xy = SpatialPointsDataFrame(fieldCenterObject,as.data.frame(matrix(ncol=1,c(1:length(fieldCenterObject)))))
-	chc <- hclust(dist(data.frame(rownames=rownames(xy@data), x=coordinates(xy)[,1],
-              y=coordinates(xy)[,2])), method="complete")
-
-# Distance with a 40m threshold  
-d = 1
-chc.d40 <- cutree(chc, h=d) 
-xy@data <- data.frame(xy@data, Clust=chc.d40)
-}
-
 
 	
 	fieldCenterObject = SpatialPoints(fieldCenters,CRS("+proj=longlat +datum=WGS84"))

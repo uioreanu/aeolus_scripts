@@ -1,4 +1,4 @@
-list.of.packages = c("zoo","kriging","RMySQL","akima","automap","rgeos","rjson")
+list.of.packages = c("zoo","kriging","RMySQL","akima","automap","rgeos","rjson","raster","rgdal")
 new.packages = list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages,repos="http://cran.rstudio.com/")
 
@@ -10,6 +10,8 @@ library(zoo)
 library(rjson)
 library(automap)  #best kriging library, but kriging has extrapolation problems. Maybe use kriging for temperature and inverse distance for rainfall
 library(rgeos)
+library(raster)
+library(rgdal)
 
 homeDir = "~/Desktop/aeolus_scripts/historical_weather"
 setwd(homeDir)
@@ -82,7 +84,7 @@ if(inherits(allJobs,"error")){
 
 #prioritize doing todays stuff first		
 		
-for(yearSelect in c(2012:2010)){
+for(yearSelect in c(2011:2010)){
   if(breakOut) break
   startYear = Sys.time()
 	if(file.exists("Data")==F) dir.create("Data")
